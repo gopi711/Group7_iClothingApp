@@ -45,6 +45,10 @@ def abt_cmpy(request):
 def cart_lgn(request):
 	return render(request,'cartloginPage.html')
 
+def rld_hmpg(request):
+	return render(request,'HomePage.html')
+
+
 
 
 def register(request):

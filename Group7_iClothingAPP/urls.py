@@ -24,4 +24,5 @@ urlpatterns = [
     path(r'Login/', views.login),
 	path(r'Aboutcmpy/', views.abt_cmpy),
 	path(r'cart_Login/', views.cart_lgn),
+	path(r'reload_hmpg/', views.rld_hmpg),
 ]

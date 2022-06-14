@@ -77,33 +77,38 @@
 		.hover_categories:hover{
 			color:black;
 			font-weight: bold;
+			cursor: pointer;
 		}
 	</style>
+	<div onclick='reload_homepage();' style='cursor:pointer;'>
+		<h3 style='font-style:italic;color:red;'>iCLOTHING</h3>
+		<p style='font-size:10px;top:5%;position:absolute;color:orange;'>Fashion Store </p>
+	</div>
 	
-    <h1>iCLOTHING</h1>
 	<div class='grow'>
 	<form action='/Login/' method='post'>
 		{% csrf_token %}
 		<b><p>Profile</p></b>
 		<br>
-		<button class='right-hover' style='font:20;width:60%;height:40%;border-color:white;'>Login/Register</button>
+		<button class='right-hover' style='font:20;width:60%;height:40%;border-color:white;cursor:pointer;'>Login/Register</button>
 		<br><br>
 	</form>
 	<form action='/Aboutcmpy/' method='post' >
 		{% csrf_token %}
-		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;'>About Company</button>
+		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>About Company</button>
 	</form>
 	<form action='/Aboutcmpy/' method='post' >
 		{% csrf_token %}
-		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;'>Contact Us</button>
+		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Contact Us</button>
 	</form><form action='/cart_Login/' method='post'>
 		{% csrf_token %}
-		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;'>Shopping Cart</button>
+		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Shopping Cart</button>
 	</form><form action='/cart_Login/' method='post'>
 		{% csrf_token %}
-		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;'>Orders</button>
+		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Orders</button>
 	</form>
 	</div>
+	<br>
 	<hr>
 	<form action='/Browse/' method='post' style='position:absolute;right:40%;top:4%;'>
 		{% csrf_token %}
@@ -203,5 +208,17 @@
 	</div>
 	
 	<h1> products</h1>
+	
+	<form action='/reload_hmpg/' id='reload_hmpg' method='post'>
+		{% csrf_token %}
+		
+	</form>
+	
+	<script>
+		function reload_homepage(){
+			document.getElementById('reload_hmpg').submit();
+		}
+	</script>
+	
 	</body>
 </html>
