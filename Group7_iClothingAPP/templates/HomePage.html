@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			iCLOTHING
+		</title>
+
+	</head>
+	<body>
+	
+	<style>
+		.grow {
+			height: 6%;
+			right:10%;
+			width: 10%;
+			top:4.6%;
+			position: absolute;
+			text-align: left;
+			overflow: hidden;
+			transition: 0.2s;
+		}
+		.grow:hover {
+			height: 35%;
+			width: 15%;
+		}
+		.right-hover:hover{
+			color: grey;
+		}
+		.categories_hover{
+			position:absolute;
+			left:22%;
+			top:4%;
+			height:10%;
+			overflow: hidden;
+		}
+		.categories_hover:hover{
+			top:14%;
+			background-color:white;
+			height: 75%;
+			width: 40%;
+			border-style: solid;
+			border-width:1px;
+			border-radius: 7px;
+		}
+		.categories_women_hover{
+			position:absolute;
+			left:29%;
+			top:4%;
+			height:10%;
+			overflow: hidden;
+		}
+		.categories_women_hover:hover{
+			top:14%;
+			background-color:white;
+			height: 75%;
+			width: 40%;
+			border-style: solid;
+			border-width:1px;
+			border-radius: 7px;
+		}
+		.categories_kids_hover{
+			position:absolute;
+			left:38%;
+			top:4%;
+			height:10%;
+			overflow: hidden;
+		}
+		.categories_kids_hover:hover{
+			top:14%;
+			background-color:white;
+			height: 75%;
+			width: 40%;
+			border-style: solid;
+			border-width:1px;
+			border-radius: 7px;
+		}
+		.hover_categories:hover{
+			color:black;
+			font-weight: bold;
+		}
+	</style>
+	
+    <h1>iCLOTHING</h1>
+	<div class='grow'>
+	<form action='/Login/' method='post'>
+		{% csrf_token %}
+		<b><p>Profile</p></b>
+		<br>
+		<button class='right-hover' style='font:20;width:60%;height:40%;border-color:white;'>Login/Register</button>
+		<br><br>
+	</form>
+	<form action='/Aboutcmpy/' method='post' >
+		{% csrf_token %}
+		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;'>About Company</button>
+	</form>
+	<form action='/Aboutcmpy/' method='post' >
+		{% csrf_token %}
+		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;'>Contact Us</button>
+	</form><form action='/cart_Login/' method='post'>
+		{% csrf_token %}
+		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;'>Shopping Cart</button>
+	</form><form action='/cart_Login/' method='post'>
+		{% csrf_token %}
+		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;'>Orders</button>
+	</form>
+	</div>
+	<hr>
+	<form action='/Browse/' method='post' style='position:absolute;right:40%;top:4%;'>
+		{% csrf_token %}
+		<input type='text' style='font:40;border-radius: 7px;width:200%;height:40px' placeholder='search'></button></form>
+	
+	<div class='categories_hover'>
+		<h2>Men</h2>
+		<p class='hover_categories' style='color:red'>Top Wear</p>
+		<p class='hover_categories'>T-Shirts</p>
+		<p class='hover_categories'>Casual Shirts</p>
+		<p class='hover_categories'>Formal Shirts</p>
+		<p class='hover_categories'>Sweaters</p>
+		<p class='hover_categories'>Suits</p>
+		<p class='hover_categories'>Jackets</p>
+		<hr>
+		<p class='hover_categories' style='color:red'>Indian & Festive wear</p>
+		<p class='hover_categories'>Kurtas</p>
+		<p class='hover_categories'>Sherwanis</p>
+		<p class='hover_categories'>Dhotis</p>
+		<div>
+			<p class='hover_categories' style='color:red;position:absolute;top:70%;left:40%;width:30%;'>Bottom Wear</p>
+			<p class='hover_categories' style='position:absolute;top:74%;left:40%;width:30%;'>Jeans</p>
+			<p class='hover_categories' style='position:absolute;top:78%;left:40%;width:30%;'>Track Pants</p>
+			<p class='hover_categories' style='position:absolute;top:82%;left:40%;width:30%;'>Shorts</p>
+			<p class='hover_categories' style='position:absolute;top:86%;left:40%;width:30%;'>Boxers</p>
+		</div>
+		
+		<div>
+			<p class='hover_categories' style='color:red;position:absolute;top:70%;left:75%;width:30%;'>Foot Wear</p>
+			<p class='hover_categories' style='position:absolute;top:74%;left:75%;width:30%;'>Shoes</p>
+			<p class='hover_categories' style='position:absolute;top:78%;left:75%;width:30%;'>Flip Flops</p>
+			<p class='hover_categories' style='position:absolute;top:82%;left:75%;width:30%;'>Socks</p>
+			<p class='hover_categories' style='position:absolute;top:86%;left:75%;width:30%;'>Sandals</p>
+		</div>
+	</div>
+	
+	<div class='categories_women_hover'>
+		<h2>Women</h2>
+		<p class='hover_categories' style='color:red'>Fusion Wear</p>
+		<p class='hover_categories'>Sarees</p>
+		<p class='hover_categories'>Kurtas</p>
+		<p class='hover_categories'>Leggings & Churidars</p>
+		<p class='hover_categories'>Skirts</p>
+		<p class='hover_categories'>Lehenga</p>
+		<p class='hover_categories'>Dupattas</p>
+		<hr>
+		<p class='hover_categories' style='color:red'>Western Wear</p>
+		<p class='hover_categories'>Dresses</p>
+		<p class='hover_categories'>Tops</p>
+		<p class='hover_categories'>Sweaters</p>
+		<div>
+			<p class='hover_categories' style='color:red;position:absolute;top:70%;left:40%;width:30%;'>Beauty & Personal Care</p>
+			<p class='hover_categories' style='position:absolute;top:74%;left:40%;width:30%;'>Make up</p>
+			<p class='hover_categories' style='position:absolute;top:78%;left:40%;width:30%;'>Skin care</p>
+			<p class='hover_categories' style='position:absolute;top:82%;left:40%;width:30%;'>Lipstick</p>
+			<p class='hover_categories' style='position:absolute;top:86%;left:40%;width:30%;'>Fragrences</p>
+		</div>
+		
+		<div>
+			<p class='hover_categories' style='color:red;position:absolute;top:70%;left:75%;width:30%;'>Foot Wear</p>
+			<p class='hover_categories' style='position:absolute;top:74%;left:75%;width:30%;'>Casual Shoes</p>
+			<p class='hover_categories' style='position:absolute;top:78%;left:75%;width:30%;'>Flats</p>
+			<p class='hover_categories' style='position:absolute;top:82%;left:75%;width:30%;'>Heels</p>
+			<p class='hover_categories' style='position:absolute;top:86%;left:75%;width:30%;'>Sports shoes</p>
+		</div>
+	</div>
+	
+	<div class='categories_kids_hover'>
+		<h2>Kids</h2>
+		<p class='hover_categories' style='color:red'>Infants</p>
+		<p class='hover_categories'>Body Suites</p>
+		<p class='hover_categories'>Dresses</p>
+		<p class='hover_categories'>Winter Wear</p>
+		<p class='hover_categories'>Inner Wear</p>
+		<p class='hover_categories'>Tshirts</p>
+		<p class='hover_categories'>Rompers</p>
+		<hr>
+		<p class='hover_categories' style='color:red'>Foot Wear</p>
+		<p class='hover_categories'>School Shoes</p>
+		<p class='hover_categories'>Socks</p>
+		<p class='hover_categories'>Sports Shoes</p>
+		<div>
+			<p class='hover_categories' style='color:red;position:absolute;top:70%;left:40%;width:30%;'>Boys Clothing</p>
+			<p class='hover_categories' style='position:absolute;top:74%;left:40%;width:30%;'>Shirts</p>
+			<p class='hover_categories' style='position:absolute;top:78%;left:40%;width:30%;'>Ethnic Wear</p>
+			<p class='hover_categories' style='position:absolute;top:82%;left:40%;width:30%;'>Sweaters</p>
+			<p class='hover_categories' style='position:absolute;top:86%;left:40%;width:30%;'>Jeans</p>
+		</div>
+		
+		<div>
+			<p class='hover_categories' style='color:red;position:absolute;top:70%;left:75%;width:30%;'>Girls Clothing</p>
+			<p class='hover_categories' style='position:absolute;top:74%;left:75%;width:30%;'>Tops</p>
+			<p class='hover_categories' style='position:absolute;top:78%;left:75%;width:30%;'>TShirts</p>
+			<p class='hover_categories' style='position:absolute;top:82%;left:75%;width:30%;'>Dresses</p>
+			<p class='hover_categories' style='position:absolute;top:86%;left:75%;width:30%;'>Party wear</p>
+		</div>
+	</div>
+	
+	<h1> products</h1>
+	</body>
+</html>
