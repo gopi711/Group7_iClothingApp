@@ -7,8 +7,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import logout, authenticate, login
 from django.contrib import messages
 
-import mysql.connector
-from mysql.connector import Error
+#import mysql.connector
+#from mysql.connector import Error
 
 import json
 import os
@@ -23,14 +23,14 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 # Create your views here.
 
-import psycopg2
-import pandas as pd
+#import psycopg2
+#import pandas as pd
 import re
-import reverse_geocoder as rg
+#import reverse_geocoder as rg
 
 import urllib
-import requests
-from bs4 import BeautifulSoup
+#import requests
+#from bs4 import BeautifulSoup
 
 
 def Homepage(request):
