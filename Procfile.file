@@ -1,1 +1,1 @@
-web: gunicorn group7iclothingapp.wsgi
+web: gunicorn Group7_iClothingAPP.wsgi
