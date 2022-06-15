@@ -40,7 +40,7 @@ def login(request):
 	return render(request,'LoginPage.html')
 
 def abt_cmpy(request):
-	return render(request,'abtPage.html')
+	return render(request,'abtpage.html')
 
 def cart_lgn(request):
 	return render(request,'cartloginPage.html')
