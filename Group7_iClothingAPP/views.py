@@ -65,10 +65,6 @@ def register(request):
 			print("Error while connecting to MySQL", e)
 			usr_exist='Username Already Taken'
 			return render(request,'LoginPage.html',{'fail_creation':usr_exist})
-		finally:
-			cursor.close()
-			connection.close()
-			print("MySQL connection is closed")
 		return render(request,'LoginPage.html',{'fail_creation':'Account Created'})
 	else:
 		pass_not_matched='Both Passwords not matched'
@@ -81,7 +77,7 @@ def login_request(request):
 		DATABASE_URL = os.environ.get('DATABASE_URL')
 		connection = psycopg2.connect(DATABASE_URL)
 		cursor = connection.cursor()
-		login_chk_qry="select count(*),account_type from user_login where username='"+login_usr+"' and password='"+login_pass+"';"
+		login_chk_qry="select count(*),account_type from user_login where username='"+login_usr+"' and password='"+login_pass+"' group by account_type;"
 		print(login_chk_qry)
 		cursor.execute(login_chk_qry)
 		record = cursor.fetchall()
