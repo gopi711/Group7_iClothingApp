@@ -66,10 +66,9 @@ def register(request):
 			usr_exist='Username Already Taken'
 			return render(request,'LoginPage.html',{'fail_creation':usr_exist})
 		finally:
-			if (connection.is_connected()):
-				cursor.close()
-				connection.close()
-				print("MySQL connection is closed")
+			cursor.close()
+			connection.close()
+			print("MySQL connection is closed")
 		return render(request,'LoginPage.html',{'fail_creation':'Account Created'})
 	else:
 		pass_not_matched='Both Passwords not matched'
@@ -99,10 +98,9 @@ def login_request(request):
 	except Error as e:
 		print("Error while connecting to MySQL : ", e)
 	finally:
-		if (connection.is_connected()):
-			cursor.close()
-			connection.close()
-			print("MySQL connection is closed")
+		cursor.close()
+		connection.close()
+		print("MySQL connection is closed")
 	return render(request,'LoginPage.html',{'login_invalid':login_invalid})
 
 def retrieve_cred(request):
