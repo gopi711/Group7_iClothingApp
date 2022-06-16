@@ -23,6 +23,9 @@ urlpatterns = [
     path(r'', views.Homepage),
     path(r'Login/', views.login),
 	path(r'Aboutcmpy/', views.abt_cmpy),
-	path(r'cart_Login/', views.cart_lgn),
+	path(r'cart_Login/', views.login),
 	path(r'reload_hmpg/', views.rld_hmpg),
+	path("Register/", views.register, name="register"),
+	path("User/", views.login_request, name="login"),
+	path("retrieve_cred/", views.retrieve_cred),
 ]

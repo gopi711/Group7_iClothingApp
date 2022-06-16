@@ -7,8 +7,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import logout, authenticate, login
 from django.contrib import messages
 
-#import mysql.connector
-#from mysql.connector import Error
+import mysql.connector
+from mysql.connector import Error
 
 import json
 import os
@@ -23,8 +23,8 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 # Create your views here.
 
-#import psycopg2
-#import pandas as pd
+import psycopg2
+import pandas as pd
 import re
 #import reverse_geocoder as rg
 
@@ -42,139 +42,60 @@ def login(request):
 def abt_cmpy(request):
 	return render(request,'abtpage.html')
 
-def cart_lgn(request):
-	return render(request,'cartloginPage.html')
-
 def rld_hmpg(request):
 	return render(request,'HomePage.html')
-
-
-
 
 def register(request):
 	reg_usr= request.POST.get('reg_username')
 	reg_email= request.POST.get('reg_email')
 	reg_pass= request.POST.get('reg_password')
 	reg_pass1= request.POST.get('reg_password1')
+	reg_type= request.POST.get('UserAcct')
 	if(reg_pass == reg_pass1):
 		try:
-			connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')                                         
-			if connection.is_connected():
-				db_Info = connection.get_server_info()
-				print("Connected to MySQL Server version ", db_Info)
-				cursor = connection.cursor()
-				cursor.execute("select database();")
-				record = cursor.fetchone()
-				print(reg_usr+' '+reg_pass+' '+reg_email)
-				insrt_qry='insert into user_login values("'+reg_usr+'","'+reg_pass+'","'+reg_email+'");'
-				print(insrt_qry)
-				cursor.execute(insrt_qry)
-				connection.commit()
+			DATABASE_URL = os.environ.get('DATABASE_URL')
+			connection = psycopg2.connect(DATABASE_URL)
+			cursor = connection.cursor()
+			#print(reg_usr+' '+reg_pass+' '+reg_email+' '+reg_type)
+			insrt_qry='insert into user_login values("'+reg_usr+'","'+reg_pass+'","'+reg_email+'","'+reg_type+'");'
+			print(insrt_qry)
+			cursor.execute(insrt_qry)
+			connection.commit()
 		except Error as e:
 			print("Error while connecting to MySQL", e)
 			usr_exist='Username Already Taken'
-			return render(request,'Home_Page.html',{'fail_creation':usr_exist})
+			return render(request,'LoginPage.html',{'fail_creation':usr_exist})
 		finally:
 			if (connection.is_connected()):
 				cursor.close()
 				connection.close()
 				print("MySQL connection is closed")
-		return render(request,'Home_Page.html')
+		return render(request,'LoginPage.html',{'fail_creation':'Account Created'})
 	else:
 		pass_not_matched='Both Passwords not matched'
-		return render(request,'Home_Page.html',{'fail_creation':pass_not_matched})
-
-def logout_request(request):
-	return render(request,'Home_Page.html')
-
-def homepage(request):
-    return render(request = request,
-                  template_name='main/home.html')
+		return render(request,'LoginPage.html',{'fail_creation':pass_not_matched})
 
 def login_request(request):
 	login_usr= request.POST.get('login_username')
 	login_pass= request.POST.get('login_password')
-	inp= request.POST.get('user_location')
-	print(inp)
-	#temp_atmos,daily_status,week_status,User_location=weather_today(inp)
-	#return render(request,'weather_web.html',{'Temp_Atmosphere':temp_atmos,"Daily_status":daily_status,"Weekly_status":week_status,'User_location':User_location})
 	try:
-		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')                                         
-		if connection.is_connected():
-			db_Info = connection.get_server_info()
-			print("Connected to MySQL Server version ", db_Info)
-			cursor = connection.cursor()
-			cursor.execute("select database();")
-			record = cursor.fetchone()
-			login_chk_qry='select count(*) from user_login where username="'+login_usr+'" and password="'+login_pass+'";'
-			print(login_chk_qry)
-			cursor.execute(login_chk_qry)
-			record = cursor.fetchone()
-			print(record)
-			if(record[0]==1):
-				numbers = re.findall('[0-9]+', inp)
-				coordinates=(float(numbers[0]+'.'+numbers[1]),float(numbers[2]+'.'+numbers[3]))
-				result=rg.search(coordinates)
-				results_df=pd.DataFrame(result)
-				User_location=results_df.loc[0][2].split(',')[0] + ',' + results_df.loc[0][3].split(',')[0]
-				User_location=User_location.replace(' ','')
-				print(User_location)
-				print("select count(*) from news where location='"+User_location+"';")
-				cursor.execute("select count(*) from news where location='"+User_location+"';")
-				tot=cursor.fetchone()
-				print(tot)
-				if(tot[0]==0):
-					print('new fetch')
-					query = User_location.replace(' ', '+')
-					URL = f"https://news.google.com/search?q={query}"
-					resp = requests.get(URL)
-					soup = BeautifulSoup(resp.content, "html.parser")
-					i=0
-					for g in soup.find_all('h3'):
-						if(i==1):
-							for h in soup.find_all('h4'):            
-								i=i+1
-						sql_insert="insert into News values ('" + User_location + "','" + (g.get_text().replace("'",' '))  +"','" + login_usr +"','2021-05-05');"
-						print(sql_insert)
-						cursor.execute(sql_insert)
-						connection.commit()
-						i=i+1
-				print("select news_headline from news where location='"+User_location+"';")
-				cursor.execute("select news_headline from news where location='"+User_location+"' limit 5;")
-				print('fetch done')
-				headlines=cursor.fetchall()
-				print(headlines)
-				news_hedlns2=headlines[1][0]
-				news_hedlns3=headlines[2][0]
-				news_hedlns4=headlines[3][0]
-				news_hedlns5=headlines[4][0]
-				news_hedlns1=headlines[0][0]	
-				try:
-					print('fetch data from table')
-					cursor.execute("select temp,daily_stat,week_stat from user_weather_location where location_name='"+User_location+"';")
-					weather=cursor.fetchone()
-					temp_atmos=weather[0]
-					daily_status=weather[1]
-					week_status=weather[2]
-					return render(request,'new_header1.html',{'user_name':login_usr,'Temp_Atmosphere':temp_atmos,'Daily_status':daily_status,'Weekly_status':week_status,'User_location':User_location,'headline_1':news_hedlns1,'headline_2':news_hedlns2,'headline_3':news_hedlns3,'headline_4':news_hedlns4,'headline_5':news_hedlns5})
-				except:
-					print('fetch weather using beautiful soup')
-					URL=f"https://darksky.net/forecast/" + (numbers[0]+'.'+numbers[1]) + ',' + (numbers[2]+'.'+numbers[3]) +'/'
-					resp = requests.get(URL)
-					soup = BeautifulSoup(resp.content, "html.parser")
-					for g in soup.find_all('span',class_='summary swap'):
-						temp_atmos=g.get_text()
-					for g in soup.find_all('span',class_='currently__summary next swap'):
-						daily_status=g.get_text().split('\n')[2].strip()
-					for g in soup.find_all('div',class_='summary'):
-						week_status=g.get_text()
-						week_status=week_status.strip()
-						print('insert query: '+week_status)
-						insrt_qry="insert into user_weather_location values('"+User_location+"','"+temp_atmos+"','"+daily_status+"','"+week_status+"','"+login_usr+"');"
-						print(insrt_qry)
-						cursor.execute(insrt_qry)
-						connection.commit()
-					return render(request,'new_header1.html',{'user_name':login_usr,'Temp_Atmosphere':temp_atmos,'Daily_status':daily_status,'Weekly_status':week_status,'User_location':User_location,'headline_1':news_hedlns1,'headline_2':news_hedlns2,'headline_3':news_hedlns3,'headline_4':news_hedlns4,'headline_5':news_hedlns5})
+		DATABASE_URL = os.environ.get('DATABASE_URL')
+		connection = psycopg2.connect(DATABASE_URL)
+		cursor = connection.cursor()
+		login_chk_qry='select count(*),account_type from user_login where username="'+login_usr+'" and password="'+login_pass+'";'
+		print(login_chk_qry)
+		cursor.execute(login_chk_qry)
+		record = cursor.fetchall()
+		print(record)
+		if(record[0][0]==1):
+			if(record[0][1]=='User'):
+				return render(request,'User_after_login.html')
+			elif(record[0][1]=='Admin'):
+				return render(request,'Admin_after_login.html')
+			else:
+				return render(request,'LoginPage.html')
+		else:
+			login_invalid='Invalid Credentials'
 	except Error as e:
 		print("Error while connecting to MySQL : ", e)
 	finally:
@@ -182,7 +103,23 @@ def login_request(request):
 			cursor.close()
 			connection.close()
 			print("MySQL connection is closed")
+	return render(request,'LoginPage.html',{'login_invalid':login_invalid})
+
+def retrieve_cred(request):
+	return render(request,'Retrieve_credentials.html')
+
+
+
+
+
+
+
+def logout_request(request):
 	return render(request,'Home_Page.html')
+
+def homepage(request):
+    return render(request = request,
+                  template_name='main/home.html')
 
 def news(request):
 	print('All news headlines')
