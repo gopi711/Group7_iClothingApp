@@ -82,10 +82,10 @@ def login_request(request):
 		cursor.execute(login_chk_qry)
 		record = cursor.fetchall()
 		print(record)
-		if(record[0][0]==1):
-			if(record[0][1]=='User'):
+		if(record[0]==1):
+			if(record[1]=='User'):
 				return render(request,'User_after_login.html')
-			elif(record[0][1]=='Admin'):
+			elif(record[1]=='Admin'):
 				return render(request,'Admin_after_login.html')
 			else:
 				return render(request,'LoginPage.html')
