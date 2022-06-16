@@ -57,7 +57,7 @@ def register(request):
 			connection = psycopg2.connect(DATABASE_URL)
 			cursor = connection.cursor()
 			#print(reg_usr+' '+reg_pass+' '+reg_email+' '+reg_type)
-			insrt_qry='insert into user_login values("'+reg_usr+'","'+reg_pass+'","'+reg_email+'","'+reg_type+'");'
+			insrt_qry="insert into user_login values('"+reg_usr+"','"+reg_pass+"','"+reg_email+"','"+reg_type+"');"
 			print(insrt_qry)
 			cursor.execute(insrt_qry)
 			connection.commit()
@@ -81,7 +81,7 @@ def login_request(request):
 		DATABASE_URL = os.environ.get('DATABASE_URL')
 		connection = psycopg2.connect(DATABASE_URL)
 		cursor = connection.cursor()
-		login_chk_qry='select count(*),account_type from user_login where username="'+login_usr+'" and password="'+login_pass+'";'
+		login_chk_qry="select count(*),account_type from user_login where username='"+login_usr+"' and password='"+login_pass+"';"
 		print(login_chk_qry)
 		cursor.execute(login_chk_qry)
 		record = cursor.fetchall()
