@@ -84,7 +84,7 @@ def login_request(request):
 		DATABASE_URL = os.environ.get('DATABASE_URL')
 		connection = psycopg2.connect(DATABASE_URL)
 		cursor = connection.cursor()
-		login_chk_qry="select count(*),account_type,account_status from user_login where username='"+login_usr+"' and password='"+login_pass+"' group by account_type;"
+		login_chk_qry="select count(*),account_type,account_status from user_login where username='"+login_usr+"' and password='"+login_pass+"' group by account_type,account_status;"
 		print(login_chk_qry)
 		cursor.execute(login_chk_qry)
 		record = cursor.fetchall()
