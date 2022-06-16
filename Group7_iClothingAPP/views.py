@@ -119,7 +119,7 @@ def add_Address(request):
 		DATABASE_URL = os.environ.get('DATABASE_URL')
 		connection = psycopg2.connect(DATABASE_URL)
 		cursor = connection.cursor()
-		login_chk_qry='select count(*) from user_login where username="'+usernm+'";'
+		login_chk_qry="select count(*) from user_login where username='"+usernm+"';"
 		print(login_chk_qry)
 		cursor.execute(login_chk_qry)
 		record = cursor.fetchone()
