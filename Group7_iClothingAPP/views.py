@@ -97,10 +97,6 @@ def login_request(request):
 			login_invalid='Invalid Credentials'
 	except Error as e:
 		print("Error while connecting to MySQL : ", e)
-	finally:
-		cursor.close()
-		connection.close()
-		print("MySQL connection is closed")
 	return render(request,'LoginPage.html',{'login_invalid':login_invalid})
 
 def retrieve_cred(request):
