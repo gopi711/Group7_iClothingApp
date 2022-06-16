@@ -31,4 +31,5 @@ urlpatterns = [
 	path("Logout/", views.logout_request, name="logout"),
 	path("Address/", views.saved_Address),
 	path("add_address/", views.add_Address),
+	path("reload_hmpg_aft_login/", views.rld_hmpg_after_login),
 ]

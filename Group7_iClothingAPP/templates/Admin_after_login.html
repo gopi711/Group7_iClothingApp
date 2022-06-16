@@ -293,14 +293,15 @@
 		</div>
 	</div>
 	
-	<form action='/reload_hmpg/' id='reload_hmpg' method='post'>
+	<form action='/reload_hmpg_aft_login/' id='reload_hmpg_aft_login' method='post'>
 		{% csrf_token %}
+		<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
 		
 	</form>
 	
 	<script>
 		function reload_homepage(){
-			document.getElementById('reload_hmpg').submit();
+			document.getElementById('reload_hmpg_aft_login').submit();
 		}
 		var i = 0;
 		var tot_no_of_products=parseInt(document.getElementById('tot_no_products').textContent);

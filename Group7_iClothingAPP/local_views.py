@@ -23,8 +23,8 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 # Create your views here.
 
-import psycopg2
-import pandas as pd
+#import psycopg2
+#import pandas as pd
 import re
 #import reverse_geocoder as rg
 
@@ -51,27 +51,35 @@ def register(request):
 	reg_pass= request.POST.get('reg_password')
 	reg_pass1= request.POST.get('reg_password1')
 	reg_type= request.POST.get('UserAcct')
-	fail_creation=''
 	if(reg_pass == reg_pass1):
 		try:
-			DATABASE_URL = os.environ.get('DATABASE_URL')
-			connection = psycopg2.connect(DATABASE_URL)
-			cursor = connection.cursor()
-			#print(reg_usr+' '+reg_pass+' '+reg_email+' '+reg_type)
-			if(reg_type=='User'):
-				acct_status_Active='Active'
-				fail_creation='Account Created'
-			else:
-				acct_status_Active='Inactive'
-				fail_creation='Account requested and awaiting for admin approval'
-			insrt_qry="insert into user_login values('"+reg_usr+"','"+reg_pass+"','"+reg_email+"','"+reg_type+"','"+acct_status_Active+"');"
-			print(insrt_qry)
-			cursor.execute(insrt_qry)
-			connection.commit()
+			connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')                                         
+			if connection.is_connected():
+				db_Info = connection.get_server_info()
+				print("Connected to MySQL Server version ", db_Info)
+				cursor = connection.cursor()
+				cursor.execute("select database();")
+				record = cursor.fetchone()
+				print(reg_usr+' '+reg_pass+' '+reg_email)
+				if(reg_type=='User'):
+					acct_status_Active='Active'
+					fail_creation='Account Created'
+				else:
+					acct_status_Active='Inactive'
+					fail_creation='Account requested and awaiting for admin approval'
+				insrt_qry='insert into user_login values("'+reg_usr+'","'+reg_pass+'","'+reg_email+'","'+reg_type+'","'+acct_status_Active+'");'
+				print(insrt_qry)
+				cursor.execute(insrt_qry)
+				connection.commit()
 		except Error as e:
 			print("Error while connecting to MySQL", e)
 			usr_exist='Username Already Taken'
 			return render(request,'LoginPage.html',{'fail_creation':usr_exist})
+		finally:
+			if (connection.is_connected()):
+				cursor.close()
+				connection.close()
+				print("MySQL connection is closed")
 		return render(request,'LoginPage.html',{'fail_creation':fail_creation})
 	else:
 		pass_not_matched='Both Passwords not matched'
@@ -81,29 +89,37 @@ def login_request(request):
 	login_usr= request.POST.get('login_username')
 	login_pass= request.POST.get('login_password')
 	try:
-		DATABASE_URL = os.environ.get('DATABASE_URL')
-		connection = psycopg2.connect(DATABASE_URL)
-		cursor = connection.cursor()
-		login_chk_qry="select count(*),account_type,account_status from user_login where username='"+login_usr+"' and password='"+login_pass+"' group by account_type;"
-		print(login_chk_qry)
-		cursor.execute(login_chk_qry)
-		record = cursor.fetchall()
-		print(record)
-		try:
-			if(record[0][0]==1):
-				if(record[0][2]=='Active'):
-					if(record[0][1]=='User'):
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			login_chk_qry='select count(*),account_type,account_status from user_login where username="'+login_usr+'" and password="'+login_pass+'";'
+			print(login_chk_qry)
+			cursor.execute(login_chk_qry)
+			record = cursor.fetchone()
+			print(record)
+			if(record[0]==1):
+				if(record[2]=='Active'):
+					if(record[1]=='User'):
 						return render(request,'User_after_login.html',{'user_name':login_usr})
-					elif(record[0][1]=='Admin'):
+					elif(record[1]=='Admin'):
 						return render(request,'Admin_after_login.html')
 					else:
 						return render(request,'LoginPage.html')
 				else:
-					login_invalid='Account is Inactive'
-		except:
-			login_invalid='Invalid Credentials'
+					login_invalid='Account is inactive'
+			else:
+				login_invalid='Invalid Credentials'
 	except Error as e:
 		print("Error while connecting to MySQL : ", e)
+	finally:
+		if (connection.is_connected()):
+			cursor.close()
+			connection.close()
+			print("MySQL connection is closed")
 	return render(request,'LoginPage.html',{'login_invalid':login_invalid})
 
 def retrieve_cred(request):
@@ -126,22 +142,26 @@ def add_Address(request):
 	pincode=request.POST.get('pincode')
 	mobile=request.POST.get('mobile')
 	try:
-		DATABASE_URL = os.environ.get('DATABASE_URL')
-		connection = psycopg2.connect(DATABASE_URL)
-		cursor = connection.cursor()
-		login_chk_qry='select count(*) from user_login where username="'+usernm+'";'
-		print(login_chk_qry)
-		cursor.execute(login_chk_qry)
-		record = cursor.fetchone()
-		print(record)
-		if(record[0]==1):
-			insert_qry="insert into user_address values('"+usernm+"','"+street+"','"+apt+"','"+city+"','"+state+"','"+pincode+"','"+mobile+"');"
-			print(insert_qry)
-			cursor.execute(insert_qry)
-			connection.commit()
-			return render(request,'saved_Address.html',{'user_name':usernm,'Status_of_address':'Address saved successfully'})
-		else:
-			return render(request,'saved_Address.html',{'user_name':usernm,'Status_of_address':'Address not saved successfully'})
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			login_chk_qry='select count(*) from user_login where username="'+usernm+'";'
+			print(login_chk_qry)
+			cursor.execute(login_chk_qry)
+			record = cursor.fetchone()
+			print(record)
+			if(record[0]==1):
+				insert_qry="insert into user_address values('"+usernm+"','"+street+"','"+apt+"','"+city+"','"+state+"','"+pincode+"','"+mobile+"');"
+				print(insert_qry)
+				cursor.execute(insert_qry)
+				connection.commit()
+				return render(request,'saved_Address.html',{'user_name':usernm,'Status_of_address':'Address saved successfully'})
+			else:
+				return render(request,'saved_Address.html',{'user_name':usernm,'Status_of_address':'Address not saved successfully'})
 	except Error as e:
 		print("Error while connecting to MySQL", e)
 	return render(request,'saved_Address.html',{'user_name':usernm,'Status_of_address':'Address not saved successfully'})
