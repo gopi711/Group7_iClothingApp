@@ -85,7 +85,7 @@ def login_request(request):
 		try:
 			if(record[0][0]==1):
 				if(record[0][1]=='User'):
-					return render(request,'User_after_login.html')
+					return render(request,'User_after_login.html',{'user_name':login_usr})
 				elif(record[0][1]=='Admin'):
 					return render(request,'Admin_after_login.html')
 				else:
@@ -99,14 +99,50 @@ def login_request(request):
 def retrieve_cred(request):
 	return render(request,'Retrieve_credentials.html')
 
-
-
-
-
-
-
 def logout_request(request):
-	return render(request,'Home_Page.html')
+	return render(request,'LoginPage.html',{'login_invalid':'Logged out Successfully'})
+
+def saved_Address(request):
+	usernm=request.POST.get('user_name1')
+	print(usernm)
+	return render(request,'saved_Address.html',{'user_name':usernm})
+
+def add_Address(request):
+	usernm=request.POST.get('user_name1')
+	street=request.POST.get('street')
+	apt=request.POST.get('Apt')
+	city=request.POST.get('city')
+	state=request.POST.get('state')
+	pincode=request.POST.get('pincode')
+	mobile=request.POST.get('mobile')
+	try:
+		DATABASE_URL = os.environ.get('DATABASE_URL')
+		connection = psycopg2.connect(DATABASE_URL)
+		cursor = connection.cursor()
+		login_chk_qry='select count(*) from user_login where username="'+usernm+'";'
+		print(login_chk_qry)
+		cursor.execute(login_chk_qry)
+		record = cursor.fetchone()
+		print(record)
+		if(record[0]==1):
+			insert_qry="insert into user_address values('"+usernm+"','"+street+"','"+apt+"','"+city+"','"+state+"','"+pincode+"','"+mobile+"');"
+			print(insert_qry)
+			cursor.execute(insert_qry)
+			connection.commit()
+			return render(request,'saved_Address.html',{'user_name':usernm,'Status_of_address':'Address saved successfully'})
+		else:
+			return render(request,'saved_Address.html',{'user_name':usernm,'Status_of_address':'Address not saved successfully'})
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+	return render(request,'saved_Address.html',{'user_name':usernm,'Status_of_address':'Address not saved successfully'})
+
+
+
+
+
+
+
+
 
 def homepage(request):
     return render(request = request,
