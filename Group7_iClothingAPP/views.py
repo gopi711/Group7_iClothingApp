@@ -315,10 +315,10 @@ def upload_file(request):
 		cursor.execute(login_chk_qry)
 		record=cursor.fetchone()
 		print(record)
-		if (record is None):
-			name_no=0
-		else:
+		try:
 			name_no=record[0][0]
+		except:
+			name_no=0
 		name_no=int(name_no)+1
 		tab_dep_name=''
 		if(department_name1 != 'select'):
