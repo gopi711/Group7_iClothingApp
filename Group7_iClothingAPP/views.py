@@ -252,6 +252,7 @@ def approve_reject(request):
 		login_chk_qry="update user_login set account_status='"+stat+"' where username='"+user_name+"';"
 		print(login_chk_qry)
 		cursor.execute(login_chk_qry)
+		dict['done_stat']='User '+status+' Successfully'
 		login_chk_qry="select username,email_id from user_login where account_type='Admin' and account_status='Inactive';"
 		cursor.execute(login_chk_qry)
 		record=cursor.fetchall()
@@ -262,7 +263,6 @@ def approve_reject(request):
 			for i in range(1,len(record)+1):
 				dict['user_name_'+str(i)]=record[i-1][0]
 				dict['Email_id_'+str(i)]=record[i-1][1]
-				dict['done_stat']='User '+status+' Successfully'
 				print(dict)
 		if(len(record)==0):
 			dict['no_requests']='No requests Approval Pending'
