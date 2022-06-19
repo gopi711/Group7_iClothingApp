@@ -349,7 +349,8 @@ def upload_file(request):
 			#uploaded_file_url = fs.url(filename)
 			#cloudinary.uploader.upload("my_picture.jpg")
 			myfile.name=department_name+str(time.strftime("%Y%m%d-%H%M"))+str(name_no)+'.png'
-			cloudinary.uploader.upload(myfile,use_filename = True, unique_filename = False)
+			cld=cloudinary.uploader.upload(myfile,use_filename = True, unique_filename = False)
+			print(cld)
 			dict['stat_new_item']='Item Successfully added to database.'
 			insrt_qry="insert into items values ("+str(name_no)+",'"+item_name+"','"+tab_dep_name+"','"+path+"','"+item_brand+"','"+item_size+"','"+str(item_price)+"','"+item_description+"');"
 			print(insrt_qry)
