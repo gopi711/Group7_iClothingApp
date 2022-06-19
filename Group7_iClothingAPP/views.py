@@ -317,7 +317,10 @@ def upload_file(request):
 		record=cursor.fetchone()
 		print(record)
 		try:
-			name_no=record[0]
+			if record is None:
+				name_no=0
+			else:
+				name_no=record[0]
 		except:
 			name_no=0
 		name_no=int(name_no)+1
