@@ -172,6 +172,7 @@ def login_request(request):
 							dict['user_name_'+str(i)]=record[i-1][0]
 							dict['Email_id_'+str(i)]=record[i-1][1]
 						dict['total_no_users']=len(record)
+						dict['total_no_products']=len(record)
 						if(len(record)==0):
 							dict['no_requests']='No requests Approval Pending'
 						print(dict)
