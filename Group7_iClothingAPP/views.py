@@ -315,7 +315,9 @@ def upload_file(request):
 		cursor.execute(login_chk_qry)
 		record=cursor.fetchone()
 		print(record)
-		if record[0][0] is not None:
+		if (record is None):
+			name_no=0
+		else:
 			name_no=record[0][0]
 		name_no=int(name_no)+1
 		tab_dep_name=''
