@@ -289,6 +289,7 @@ def upload_file(request):
 	item_size=request.POST.get('item_size')
 	item_price=request.POST.get('item_price')
 	item_description=request.POST.get('item_des')
+	item_tot=request.POST.get('item_tot')
 	
 	dict2={}
 	dict2['Men_top_wear']=['T Shirt','Casual Shirt','Men Sweaters','Suits','Jackets','Formal Shirt']
@@ -356,7 +357,7 @@ def upload_file(request):
 			#print(cld)
 			path=cld['secure_url']
 			dict['stat_new_item']='Item Successfully added to database.'
-			insrt_qry="insert into items values ("+str(name_no)+",'"+item_name+"','"+tab_dep_name+"','"+path+"','"+item_brand+"','"+item_size+"','"+str(item_price)+"','"+item_description+"');"
+			insrt_qry="insert into items values ("+str(name_no)+",'"+item_name+"','"+tab_dep_name+"','"+path+"','"+item_brand+"','"+item_size+"','"+str(item_price)+"','"+item_description+"',"+item_tot+");"
 			print(insrt_qry)
 			cursor.execute(insrt_qry)
 			connection.commit()
