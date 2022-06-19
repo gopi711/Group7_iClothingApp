@@ -343,12 +343,12 @@ def upload_file(request):
 		if request.method == 'POST' and request.FILES['myfile']:
 			print('if loop')
 			myfile = request.FILES['myfile']
-			fs = FileSystemStorage(path)
-			filename = fs.save(myfile.name, myfile)
+			#fs = FileSystemStorage(path)
+			#filename = fs.save(myfile.name, myfile)
 			#filename = fs.save('C:\Group7_iClothingAPP\static\Women', myfile)
 			#uploaded_file_url = fs.url(filename)
 			#cloudinary.uploader.upload("my_picture.jpg")
-			cloudinary.uploader.upload(department_name+'.png')
+			cloudinary.uploader.upload(myfile)
 			dict['stat_new_item']='Item Successfully added to database.'
 			insrt_qry="insert into items values ("+str(name_no)+",'"+item_name+"','"+tab_dep_name+"','"+path+"','"+item_brand+"','"+item_size+"','"+str(item_price)+"','"+item_description+"');"
 			print(insrt_qry)
