@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Group7_iClothingAPP',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -134,3 +136,11 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 django_heroku.settings(locals())
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'hjuqsdwni',
+    'API_KEY': '639832939864217',
+    'API_SECRET': 'n-cRsvD6B6AXVaEiDSoJg4QPmRE',
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

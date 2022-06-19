@@ -21,3 +21,5 @@ sqlparse==0.4.2
 tzdata==2022.1
 urllib3==1.26.9
 whitenoise==6.2.0
+cloudinary==1.17.0
+django-cloudinary-storage==0.2.3

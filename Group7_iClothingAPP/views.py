@@ -332,7 +332,7 @@ def upload_file(request):
 				tab_dep_name=i
 				break
 		tab_dep_name=tab_dep_name[:tab_dep_name.find('_')]+'/'+tab_dep_name[tab_dep_name.find('_')+1:]
-		path='/media/'+tab_dep_name+'/'+department_name+'/'+department_name+str(time.strftime("%Y%m%d-%H%M"))+str(name_no)+'.png'
+		path='/static/'+tab_dep_name+'/'+department_name+'/'+department_name+str(time.strftime("%Y%m%d-%H%M"))+str(name_no)+'.png'
 		print(item_name+' '+item_brand+' '+item_size+' '+item_price+' '+item_description)
 		print('Departments:')
 		print(department_name1)
