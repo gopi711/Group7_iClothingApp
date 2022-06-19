@@ -157,7 +157,7 @@ def login_request(request):
 						if(count_imgs>1000):
 							count_imgs=1000
 						dict['total_no_products']=count_imgs
-						dict['total_no_products']=22
+						#dict['total_no_products']=22
 						dict['user_name']=login_usr
 						#print(dict)
 						return render(request,'User_after_login.html',dict)
