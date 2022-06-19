@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
+from django.conf import settings
 
 from . import views
 
@@ -32,4 +34,14 @@ urlpatterns = [
 	path("Address/", views.saved_Address),
 	path("add_address/", views.add_Address),
 	path("reload_hmpg_aft_login/", views.rld_hmpg_after_login),
+	path("approve_reject/", views.approve_reject),
+	path("upld_new/", views.upld_new),
+	path("upload_file/", views.upload_file),
+	path("open_cart/", views.open_cart),
 ]
+
+#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+    urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

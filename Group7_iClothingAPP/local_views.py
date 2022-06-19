@@ -23,18 +23,70 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 # Create your views here.
 
-#import psycopg2
-#import pandas as pd
+import psycopg2
+import pandas as pd
 import re
 #import reverse_geocoder as rg
 
 import urllib
-#import requests
+from urllib import request
+import requests
 #from bs4 import BeautifulSoup
-
+import time
 
 def Homepage(request):
-	return render(request,'HomePage.html')
+	items=[]
+	price=[]
+	item_path=[]
+	dict={}
+	'''for root, dirs, files in os.walk(os.getcwd()):
+		if('Group7_iClothingAPP\\static\\' in root):
+			for file in files:
+				l.append(root+file)
+	'''
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')                                         
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			fetch_query="select item_name,price,item_path from items;"
+			print(fetch_query)
+			cursor.execute(fetch_query)
+			records = cursor.fetchall()
+			print(records)
+			for i in range(0,len(records)):
+				dict['product_no_'+str(i+1)]=records[i][0]
+				dict['price_'+str(i+1)]=records[i][1]
+				dict['item_path_'+str(i+1)]=records[i][2]
+				items.append(records[i][0])
+				price.append(records[i][1])
+				item_path.append(records[i][2])
+			connection.commit()
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+	finally:
+		if (connection.is_connected()):
+			cursor.close()
+			connection.close()
+			print("MySQL connection is closed")
+	
+	count_imgs=len(items)
+	item_paths=''
+	for i in range(1,(len(dict)//3)+1):
+		item_paths=item_paths+(dict['item_path_'+str(i)])+','
+	
+	item_paths=item_paths[:len(item_paths)-1]
+	dict['item_paths']=item_paths
+	#print(item_paths)
+	#print(dict)
+	#count_imgs=40
+	if(count_imgs>1000):
+		count_imgs=1000
+	dict['total_no_products']=count_imgs
+	return render(request,'HomePage.html',dict)
 
 def login(request):
 	return render(request,'LoginPage.html')
@@ -43,7 +95,7 @@ def abt_cmpy(request):
 	return render(request,'abtpage.html')
 
 def rld_hmpg(request):
-	return render(request,'HomePage.html')
+	return render(request,'HomePage.html',{'total_no_products':3})
 
 def register(request):
 	reg_usr= request.POST.get('reg_username')
@@ -88,6 +140,10 @@ def register(request):
 def login_request(request):
 	login_usr= request.POST.get('login_username')
 	login_pass= request.POST.get('login_password')
+	items=[]
+	price=[]
+	item_path=[]
+	dict={}
 	try:
 		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
 		if connection.is_connected():
@@ -104,9 +160,45 @@ def login_request(request):
 			if(record[0]==1):
 				if(record[2]=='Active'):
 					if(record[1]=='User'):
-						return render(request,'User_after_login.html',{'user_name':login_usr})
+						fetch_query="select item_name,price,item_path from items;"
+						print(fetch_query)
+						cursor.execute(fetch_query)
+						records = cursor.fetchall()
+						print(records)
+						for i in range(0,len(records)):
+							dict['product_no_'+str(i+1)]=records[i][0]
+							dict['price_'+str(i+1)]=records[i][1]
+							dict['item_path_'+str(i+1)]=records[i][2]
+							items.append(records[i][0])
+							price.append(records[i][1])
+							item_path.append(records[i][2])
+						count_imgs=len(items)
+						item_paths=''
+						for i in range(1,(len(dict)//3)+1):
+							item_paths=item_paths+(dict['item_path_'+str(i)])+','
+						item_paths=item_paths[:len(item_paths)-1]
+						dict['item_paths']=item_paths
+						if(count_imgs>1000):
+							count_imgs=1000
+						dict['total_no_products']=count_imgs
+						dict['total_no_products']=22
+						dict['user_name']=login_usr
+						#print(dict)
+						return render(request,'User_after_login.html',dict)
 					elif(record[1]=='Admin'):
-						return render(request,'Admin_after_login.html')
+						dict={}
+						login_chk_qry="select username,email_id from user_login where account_type='Admin' and account_status='Inactive';"
+						cursor.execute(login_chk_qry)
+						record=cursor.fetchall()
+						print(record)
+						for i in range(1,len(record)+1):
+							dict['user_name_'+str(i)]=record[i-1][0]
+							dict['Email_id_'+str(i)]=record[i-1][1]
+						dict['total_no_users']=len(record)
+						if(len(record)==0):
+							dict['no_requests']='No requests Approval Pending'
+						print(dict)
+						return render(request,'Admin_after_login.html',dict)
 					else:
 						return render(request,'LoginPage.html')
 				else:
@@ -170,6 +262,152 @@ def rld_hmpg_after_login(request):
 	usernm=request.POST.get('user_name1')
 	print(usernm)
 	return render(request,'User_after_login.html',{'user_name':usernm})
+
+def approve_reject(request):
+	data=request.POST.get('user_apr_rej')
+	print(data)
+	user_name=data[:data.find(' ')]
+	stat=data[data.find(' ')+1:]
+	dict={}
+	status=''
+	if(stat=='approve'):
+		stat='Active'
+		status='Approved'
+	else:
+		stat='Rejected'
+		status='Rejected'
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			login_chk_qry="update user_login set account_status='"+stat+"' where username='"+user_name+"';"
+			print(login_chk_qry)
+			cursor.execute(login_chk_qry)
+			login_chk_qry="select username,email_id from user_login where account_type='Admin' and account_status='Inactive';"
+			cursor.execute(login_chk_qry)
+			record=cursor.fetchall()
+			print(len(record))
+			connection.commit()
+			if record is not None:
+				dict['total_no_users']=len(record)
+				for i in range(1,len(record)+1):
+					dict['user_name_'+str(i)]=record[i-1][0]
+					dict['Email_id_'+str(i)]=record[i-1][1]
+					dict['done_stat']='User '+status+' Successfully'
+					print(dict)
+			if(len(record)==0):
+				dict['no_requests']='No requests Approval Pending'
+				#dict['total_no_users']=0
+			return render(request,'Admin_after_login.html',dict)
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+	dict['done_stat']='User Approval Not Completed, Please try again'
+	return render(request,'Admin_after_login.html',dict)
+
+def upld_new(request):
+	return render(request,'Admin_Upload_New.html')
+
+def upload_file(request):
+	print('request.FILES')
+	dict={}
+	dict['stat_new_item']='Item not Successfully added to database, Please try again'
+	item_name=request.POST.get('item_name')
+	department_name1=request.POST.get('category1')
+	department_name2=request.POST.get('category2')
+	department_name3=request.POST.get('category3')
+	path='static/Women/Top Wear'
+	item_brand=request.POST.get('item_brand')
+	item_size=request.POST.get('item_size')
+	item_price=request.POST.get('item_price')
+	item_description=request.POST.get('item_des')
+	
+	dict2={}
+	dict2['Men_top_wear']=['T Shirt','Casual Shirt','Men Sweaters','Suits','Jackets','Formal Shirt']
+	dict2['Men_Indian_Festive_Wear']=['Men Kurtas','Sherwanis','Dhothis']
+	dict2['Men_Bottom_Wear']=['Men Jeans','Track Pants','Boxers','Shorts']
+	dict2['Men_Foot_Wear']=['Shoes','Flip Flops','Sandals','Men Socks']
+
+	dict2['Women_Fusion_Wear']=['Sarees','Women Kurtas','Leggings & Churidars','Skirts','Lehenga','Dupattas']
+	dict2['Women_Western_Wear']=['Women Dresses','Women Tops','Women Sweaters']
+	dict2['Women_Beauty_Care']=['Makeup','Skin Care','Lipsticks','Fragrences']
+	dict2['Women_Foot_Wear']=['Casual Shoes','Flats','Heels','Women Sports Shoes']
+
+	dict2['Kids_Infants']=['Body Suites','Kids Dresses','Winter Wear','Inner Wear','Tshirts','Rompers']
+	dict2['Kids_Boys_Clothing']=['Shirts','Ethnic Wear','Jeans','Kids Sweaters']
+	dict2['Kids_girls_Clothing']=['Tops','TShirt','Dresses','Party wear']
+	dict2['Kids_Foot_Wear']=['School Shoes','Sports Shoes','Socks']
+	department_name=''
+	name_no=0
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			login_chk_qry="select max(item_no) from items;"
+			print(login_chk_qry)
+			cursor.execute(login_chk_qry)
+			record=cursor.fetchone()
+			if record is not None:
+				name_no=record[0]
+			name_no=int(name_no)+1
+			tab_dep_name=''
+			if(department_name1 != 'select'):
+				department_name=department_name1
+			elif(department_name2 != 'select'):
+				department_name=department_name2
+			else:
+				department_name=department_name3
+			for i in dict2:
+				if(department_name in dict2[i]):
+					tab_dep_name=i
+					break
+			tab_dep_name=tab_dep_name[:tab_dep_name.find('_')]+'/'+tab_dep_name[tab_dep_name.find('_')+1:]
+			path='static/'+tab_dep_name+'/'+department_name+'/'+department_name+str(time.strftime("%Y%m%d-%H%M"))+str(name_no)+'.png'
+			print(item_name+' '+item_brand+' '+item_size+' '+item_price+' '+item_description)
+			print('Departments:')
+			print(department_name1)
+			print(department_name2)
+			print(department_name3)
+			print(path)
+			if request.method == 'POST' and request.FILES['myfile']:
+				print('if loop')
+				myfile = request.FILES['myfile']
+				fs = FileSystemStorage(path)
+				filename = fs.save(myfile.name, myfile)
+				#filename = fs.save('C:\Group7_iClothingAPP\static\Women', myfile)
+				uploaded_file_url = fs.url(filename)
+				dict['stat_new_item']='Item Successfully added to database.'
+				insrt_qry="insert into items values ("+str(name_no)+",'"+item_name+"','"+tab_dep_name+"','"+path+"','"+item_brand+"','"+item_size+"','"+str(item_price)+"','"+item_description+"');"
+				print(insrt_qry)
+				cursor.execute(insrt_qry)
+				connection.commit()
+				return render(request,'Admin_Upload_New.html',dict)
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+	return render(request,'Admin_Upload_New.html',dict)
+
+def open_cart(request):
+	usernm=request.POST.get('user_name1')
+	no_of_items_cart=request.POST.get('cart_val')
+	item_paths=request.POST.get('cart_click')
+	
+	return render(request,'User_Shopping_Cart.html')
+	
+
+
+
+
+
+
+
+
 
 
 

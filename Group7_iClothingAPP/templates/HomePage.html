@@ -91,9 +91,10 @@
 			height:40%;
 			border-radius:10px;
 			border-color:black;
-			background-color:red;
+			background-color:cyan;
 			position:absolute;
 		}
+		
 	</style>
 	<div onclick='reload_homepage();' style='cursor:pointer;'>
 		<h3 style='font-style:italic;color:red;'>iCLOTHING</h3>
@@ -129,77 +130,114 @@
 		{% csrf_token %}
 		<input type='text' style='font:40;border-radius: 7px;width:200%;height:40px' placeholder='search'></button></form>
 	
-	<h2 id='tot_no_products' style='visibility:hidden'>2</h2>
+	<h2 id='tot_no_products' style='visibility:hidden'>{{total_no_products}}</h2>
 	<br>
-	<div id='Remove_if_Empty1'>
-		<div class='products_view'>
+	<div id='Remove_if_Empty1' >
+		{% csrf_token %}
+		<div class='products_view' id='last_clone' >
 			{% load static %}
-			<img id='Remove_if_Empty_div_1' src='{% static "MenTshirt150620221.PNG" %}' style="width:100%;height:100%;"></img>
+			<!--<img id='Remove_if_Empty_div_1' src='{% static item_path_1 %}' style="width:100%;height:100%;"></img>-->
+			<img id='Remove_if_Empty_div_1' src='{% static "Mencasual150620222.PNG" %}' style="width:100%;height:100%;background-color:white"></img>
+			<!--<img id='Remove_if_Empty_div_1' src='{{item_path_1}}' style="width:100%;height:100%;"></img>-->
 		</div>
-		<h3 id='Remove_if_Empty_h3_1' style='bottom:26%;position:absolute;'>H&M Men Pink Printed T-shirt</h3>
-		<h4 id='Remove_if_Empty_h4_1' style='bottom:22%;position:absolute;'>Price: $15</h4>
+		<h3 id='Remove_if_Empty_h3_1' style='bottom:26%;position:absolute;'>{{product_no_1}}</h3>
+		<h4 id='Remove_if_Empty_h4_1' style='bottom:22%;position:absolute;'>{{price_1}}</h4>
 	</div>
 	<div id='Remove_if_Empty2'>
+		{% csrf_token %}
 		<div class='products_view' style='left:25%;'>
 		{% load static %}
-			<img id='Remove_if_Empty_div_2' src='{% static "Mencasual150620222.PNG" %}' style="width:100%;height:100%;"></img>
+			<img id='Remove_if_Empty_div_2' src='{% static "Mncasual150620222.PNG" %}' style="width:100%;height:100%;"></img>
 		</div>
-		<h3 id='Remove_if_Empty_h3_2' style='bottom:26%;position:absolute;left:26%;'>Casual Shirt</h3>
-		<h4 id='Remove_if_Empty_h4_2' style='bottom:22%;position:absolute;left:26%;'>Price: $18</h4>
+		<h3 id='Remove_if_Empty_h3_2' style='bottom:26%;position:absolute;left:26%;'>{{product_no_2}}</h3>
+		<h4 id='Remove_if_Empty_h4_2' style='bottom:22%;position:absolute;left:26%;'>{{price_2}}</h4>
 	</div>
 	<div id='Remove_if_Empty3'>
-		<div class='products_view' id='Remove_if_Empty_div_3' style='left:50%;'>d-inline</div>
-		<h3 id='Remove_if_Empty_h3_3' style='bottom:26%;position:absolute;left:51%;'>T-Shirt</h3>
-		<h4 id='Remove_if_Empty_h4_3' style='bottom:22%;position:absolute;left:51%;'>Price: $20</h4>
+		{% csrf_token %}
+		<div class='products_view' style='left:50%;'>
+		{% load static %}
+			<img id='Remove_if_Empty_div_3' src='{% static "MnFormal170620223.PNG" %}' style="width:100%;height:100%;"></img>
+		</div>
+		<h3 id='Remove_if_Empty_h3_3' style='bottom:26%;position:absolute;left:51%;'>{{product_no_3}}</h3>
+		<h4 id='Remove_if_Empty_h4_3' style='bottom:22%;position:absolute;left:51%;'>{{price_3}}</h4>
 	</div>
 	<div id='Remove_if_Empty4'>
-		<div class='products_view'  id='Remove_if_Empty_div_4' style='left:75%;'>d-inline</div>
-		<h3 id='Remove_if_Empty_h3_4' style='bottom:26%;position:absolute;left:76%;'>T-Shirt</h3>
-		<h4 id='Remove_if_Empty_h4_4' style='bottom:22%;position:absolute;left:76%;'>Price: $20</h4>
+		<div class='products_view' style='left:75%;'>
+		{% load static %}
+			<img id='Remove_if_Empty_div_4' src='{% static "Mncasual150620222.PNG" %}' style="width:100%;height:100%;"></img>
+		</div>
+		<h3 id='Remove_if_Empty_h3_4' style='bottom:26%;position:absolute;left:76%;'>{{product_no_4}}</h3>
+		<h4 id='Remove_if_Empty_h4_4' style='bottom:22%;position:absolute;left:76%;'>{{price_4}}</h4>
 	</div>
 	
 	<div id='Remove_if_Empty5'>
-		<div class='products_view' id='Remove_if_Empty_div_5' style='top:80%;position:absolute'>d-inline</div>
-		<h3 id='Remove_if_Empty_h3_5' style='top:120%;position:absolute;'>T-Shirt</h3>
-		<h4 id='Remove_if_Empty_h4_5' style='top:124%;position:absolute;'>Price: $20</h4>
+		<div class='products_view' style='top:80%;position:absolute'>
+		{% load static %}
+			<img id='Remove_if_Empty_div_5' src='{% static "Mncasual150620222.PNG" %}' style="width:100%;height:100%;"></img>
+		</div>
+		<h3 id='Remove_if_Empty_h3_5' style='top:120%;position:absolute;'>{{product_no_5}}</h3>
+		<h4 id='Remove_if_Empty_h4_5' style='top:124%;position:absolute;'>{{price_5}}</h4>
 	</div>
 	<div id='Remove_if_Empty6'>
-		<div class='products_view' id='Remove_if_Empty_div_6' style='top:80%; position:absolute;left:25%'>d-inline</div>
-		<h3 id='Remove_if_Empty_h3_6' style='top:120%;position:absolute;left:26%;'>T-Shirt</h3>
-		<h4 id='Remove_if_Empty_h4_6' style='top:124%;position:absolute;left:26%;'>Price: $20</h4>
+		<div class='products_view' style='top:80%; position:absolute;left:25%'>
+		{% load static %}
+			<img id='Remove_if_Empty_div_6' src='{% static "Mncasual150620222.PNG" %}' style="width:100%;height:100%;"></img>
+		</div>
+		<h3 id='Remove_if_Empty_h3_6' style='top:120%;position:absolute;left:26%;'>{{product_no_6}}</h3>
+		<h4 id='Remove_if_Empty_h4_6' style='top:124%;position:absolute;left:26%;'>{{price_6}}</h4>
 	</div>
 	<div id='Remove_if_Empty7'>
-		<div class='products_view' id='Remove_if_Empty_div_7' style='top:80%;position:absolute;left:50%;'>d-inline</div>
-		<h3 id='Remove_if_Empty_h3_7' style='top:120%;position:absolute;left:51%;'>T-Shirt</h3>
-		<h4 id='Remove_if_Empty_h4_7' style='top:124%;position:absolute;left:51%;'>Price: $20</h4>
+		<div class='products_view' style='top:80%;position:absolute;left:50%;'>
+		{% load static %}
+			<img id='Remove_if_Empty_div_7' src='{% static "Mncasual150620222.PNG" %}' style="width:100%;height:100%;"></img>
+		</div>
+		<h3 id='Remove_if_Empty_h3_7' style='top:120%;position:absolute;left:51%;'>{{product_no_7}}</h3>
+		<h4 id='Remove_if_Empty_h4_7' style='top:124%;position:absolute;left:51%;'>{{price_7}}</h4>
 	</div>
 	<div id='Remove_if_Empty8'>
-		<div class='products_view' id='Remove_if_Empty_div_8' style='top:80%;position:absolute;left:75%;'>d-inline</div>
-		<h3 id='Remove_if_Empty_h3_8' style='top:120%;position:absolute;left:76%;'>T-Shirt</h3>
-		<h4 id='Remove_if_Empty_h4_8' style='top:124%;position:absolute;left:76%;'>Price: $20</h4>
+		<div class='products_view' style='top:80%;position:absolute;left:75%;'>
+		{% load static %}
+			<img id='Remove_if_Empty_div_8' src='{% static "Mncasual150620222.PNG" %}' style="width:100%;height:100%;"></img>
+		</div>
+		<h3 id='Remove_if_Empty_h3_8' style='top:120%;position:absolute;left:76%;'>{{product_no_8}}</h3>
+		<h4 id='Remove_if_Empty_h4_8' style='top:124%;position:absolute;left:76%;'>{{price_8}}</h4>
 	</div>
 	
 	<div id='Remove_if_Empty9'>
-		<div class='products_view' id='Remove_if_Empty_div_9' style='top:135%;position:absolute'>d-inline</div>
-		<h3 id='Remove_if_Empty_h3_9' style='top:175%;position:absolute;'>T-Shirt</h3>
-		<h4 id='Remove_if_Empty_h4_9' style='top:179%;position:absolute;'>Price: $20</h4>
+		<div class='products_view' style='top:135%;position:absolute'>
+		{% load static %}
+			<img id='Remove_if_Empty_div_9' src='{% static "Mncasual150620222.PNG" %}' style="width:100%;height:100%;"></img>
+		</div>
+		<h3 id='Remove_if_Empty_h3_9' style='top:175%;position:absolute;'>{{product_no_9}}</h3>
+		<h4 id='Remove_if_Empty_h4_9' style='top:179%;position:absolute;'>{{price_9}}</h4>
 	</div>
 	<div id='Remove_if_Empty10'>
-		<div class='products_view' id='Remove_if_Empty_div_10' style='top:135%; position:absolute;left:25%'>d-inline</div>
-		<h3  id='Remove_if_Empty_h3_10' style='top:175%;position:absolute;left:26%;'>T-Shirt</h3>
-		<h4 id='Remove_if_Empty_h4_10' style='top:179%;position:absolute;left:26%;'>Price: $20</h4>
+		<div class='products_view' style='top:135%; position:absolute;left:25%'>
+		{% load static %}
+			<img id='Remove_if_Empty_div_10' src='{% static "Mncasual150620222.PNG" %}' style="width:100%;height:100%;"></img>
+		</div>
+		<h3  id='Remove_if_Empty_h3_10' style='top:175%;position:absolute;left:26%;'>{{product_no_10}}</h3>
+		<h4 id='Remove_if_Empty_h4_10' style='top:179%;position:absolute;left:26%;'>{{price_10}}</h4>
 	</div>
 	<div id='Remove_if_Empty11'>
-		<div class='products_view' id='Remove_if_Empty_div_11' style='top:135%;position:absolute;left:50%;'>d-inline</div>
-		<h3 id='Remove_if_Empty_h3_11' style='top:175%;position:absolute;left:51%;'>T-Shirt</h3>
-		<h4 id='Remove_if_Empty_h4_11' style='top:179%;position:absolute;left:51%;'>Price: $20</h4>
+		<div class='products_view' style='top:135%;position:absolute;left:50%;'>
+		{% load static %}
+			<img id='Remove_if_Empty_div_11' src='{% static "Mncasual150620222.PNG" %}' style="width:100%;height:100%;"></img>
+		</div>
+		<h3 id='Remove_if_Empty_h3_11' style='top:175%;position:absolute;left:51%;'>{{product_no_11}}</h3>
+		<h4 id='Remove_if_Empty_h4_11' style='top:179%;position:absolute;left:51%;'>{{price_11}}</h4>
 	</div>
 	<div id='Remove_if_Empty12'>
-		<div class='products_view' id='Remove_if_Empty_div_12' style='top:135%;position:absolute;left:75%;'>d-inline</div>
-		<h3 id='Remove_if_Empty_h3_12' style='top:175%;position:absolute;left:76%;'>T-Shirt</h3>
-		<h4 id='Remove_if_Empty_h4_12' style='top:179%;position:absolute;left:76%;'>Price: $20</h4>
+		<div class='products_view' style='top:135%;position:absolute;left:75%;'>
+		{% load static %}
+			<img id='Remove_if_Empty_div_12' src='{% static "Mncasual150620222.PNG" %}' style="width:100%;height:100%;"></img>
+		</div>
+		<h3 id='Remove_if_Empty_h3_12' style='top:175%;position:absolute;left:76%;'>{{product_no_12}}</h3>
+		<h4 id='Remove_if_Empty_h4_12' style='top:179%;position:absolute;left:76%;'>{{price_12}}</h4>
 	</div>
-	<div id='Remove_if_Empty'>
+	<textarea rows='100' cols='60' id='t1' style="position:absolute;top:1%;visibility:hidden;">{{item_paths}}</textarea>
+	<textarea rows='100' cols='60' id='t2' style="position:absolute;top:1%;visibility:hidden;">Hi</textarea>
+	<div id='Remove_if_Empty' style='top:200%;background-color:white;'>
 	
 	</div>
 	
@@ -301,24 +339,61 @@
 		
 	</form>
 	
+	
 	<script>
 		function reload_homepage(){
 			document.getElementById('reload_hmpg').submit();
 		}
+		var str="";
+		var text_ar=(document.getElementById("t1").value).split(',');
+		//document.getElementById("t2").value=text_ar[0];
+		//document.getElementById('Remove_if_Empty_div_2').src='{{item_path_2}}';
+		//str='{% static {{';
+		
+		/*document.getElementById('Remove_if_Empty_div_1').src='{{item_path_1}}';
+		document.getElementById('Remove_if_Empty_div_2').src='{{item_path_2}}';
+		document.getElementById('Remove_if_Empty_div_3').src='{{item_path_3}}';
+		document.getElementById('Remove_if_Empty_div_4').src='{{item_path_4}}';
+		document.getElementById('Remove_if_Empty_div_5').src='{{item_path_5}}';
+		document.getElementById('Remove_if_Empty_div_6').src='{{item_path_6}}';
+		document.getElementById('Remove_if_Empty_div_7').src='{{item_path_7}}';
+		document.getElementById('Remove_if_Empty_div_8').src='{{item_path_8}}';
+		document.getElementById('Remove_if_Empty_div_9').src='{{item_path_9}}';
+		document.getElementById('Remove_if_Empty_div_10').src='{{item_path_10}}';
+		document.getElementById('Remove_if_Empty_div_11').src='{{item_path_11}}';
+		document.getElementById('Remove_if_Empty_div_12').src='{{item_path_12}}';
+		*/
+		
+		document.getElementById('Remove_if_Empty_div_1').src=text_ar[0];
+		document.getElementById('Remove_if_Empty_div_2').src=text_ar[1];
+		document.getElementById('Remove_if_Empty_div_3').src=text_ar[2];
+		document.getElementById('Remove_if_Empty_div_4').src=text_ar[3];
+		document.getElementById('Remove_if_Empty_div_5').src=text_ar[4];
+		document.getElementById('Remove_if_Empty_div_6').src=text_ar[5];
+		document.getElementById('Remove_if_Empty_div_7').src=text_ar[6];
+		document.getElementById('Remove_if_Empty_div_8').src=text_ar[7];
+		document.getElementById('Remove_if_Empty_div_9').src=text_ar[8];
+		document.getElementById('Remove_if_Empty_div_10').src=text_ar[9];
+		document.getElementById('Remove_if_Empty_div_11').src=text_ar[10];
+		document.getElementById('Remove_if_Empty_div_12').src=text_ar[11];
+		document.getElementById('Remove_if_Empty_div_1').src=text_ar[0];
 		
 		var tot_products=parseInt(document.getElementById('tot_no_products').textContent);
+
 		const elem = document.getElementById('Remove_if_Empty');
 		//set n to the value form the previous page
 		const clone = elem.cloneNode(true);
 		var i=13;
-		var div_top=135;
-		var div_h3=175;
-		var div_h4=179;
+		var div_top=-155;
+		var div_h3=400;
+		var div_h4=400;
 		while(i<=tot_products) {
 			// Create a copy of it
-			div_top=div_top+55;
-			div_h3=div_h3+55;
-			div_h4=div_h4+55;
+			div_top=div_top+155;
+			div_h3=div_top+100;
+			div_h4=div_h3+15;
+			//div_h3=div_h3+125;
+			//div_h4=div_h4+140;
 			// Update the ID
 			
 			const elem1 = document.getElementById('Remove_if_Empty_div_9');
@@ -381,6 +456,16 @@
 			document.getElementById(clone_div1).style.top=div_top+"%";
 			document.getElementById(clone_h3).style.top=div_h3+"%";
 			document.getElementById(clone_h4).style.top=div_h4+"%";
+			document.getElementById(clone_div1).style.position="absolute";
+			str="{{item_path_"+i.toString();
+			str=str+"}}";
+			str=text_ar[i-1];
+			document.getElementById(clone_div1).src=str;
+			document.getElementById(clone.id).classList="products_view";
+			document.getElementById(clone_h3).style.width="100%";
+			//str="{% static '{{item_path_"+i.toString()
+			//str=str+"}}' %}";
+			//document.getElementById(clone_div1).src=str;
 			
 			if((i+1)<=tot_products){
 			clone.id = "Remove_if_Empty"+(i+1).toString();
@@ -388,12 +473,19 @@
 			document.getElementById(clone.id).appendChild(clone4);
 			document.getElementById(clone.id).appendChild(clone5);
 			document.getElementById(clone.id).appendChild(clone6);
-			document.getElementById(clone4.id).style.left="25%";
-			document.getElementById(clone5.id).style.left="26%";
-			document.getElementById(clone6.id).style.left="26%";
+			document.getElementById(clone4.id).style.left="123%";
+			document.getElementById(clone5.id).style.left="125%";
+			document.getElementById(clone6.id).style.left="125%";
 			document.getElementById(clone4.id).style.top=div_top+"%";
 			document.getElementById(clone5.id).style.top=div_h3+"%";
 			document.getElementById(clone6.id).style.top=div_h4+"%";
+			document.getElementById(clone4.id).style.position="absolute";
+			str="{{item_path_"+(i+1).toString();
+			str=str+"}}";
+			str=text_ar[i];
+			document.getElementById(clone.id).src=str;
+			document.getElementById(clone.id).classList="products_view";
+			document.getElementById(clone5.id).style.width="100%";
 			}
 			
 			if((i+2)<=tot_products){
@@ -402,12 +494,19 @@
 			document.getElementById(clone.id).appendChild(clone7);
 			document.getElementById(clone.id).appendChild(clone8);
 			document.getElementById(clone.id).appendChild(clone9);
-			document.getElementById(clone7.id).style.left="50%";
-			document.getElementById(clone8.id).style.left="51%";
-			document.getElementById(clone9.id).style.left="51%";
+			document.getElementById(clone7.id).style.left="247%";
+			document.getElementById(clone8.id).style.left="249%";
+			document.getElementById(clone9.id).style.left="249%";
 			document.getElementById(clone7.id).style.top=div_top+"%";
 			document.getElementById(clone8.id).style.top=div_h3+"%";
 			document.getElementById(clone9.id).style.top=div_h4+"%";
+			document.getElementById(clone7.id).style.position="absolute";
+			str="{{item_path_"+(i+2).toString();
+			str=str+"}}";
+			str=text_ar[i+1];
+			document.getElementById(clone.id).src=str;
+			document.getElementById(clone.id).classList="products_view";
+			document.getElementById(clone8.id).style.width="100%";
 			}
 			if((i+3)<=tot_products){
 			clone.id = "Remove_if_Empty"+(i+3).toString();
@@ -415,27 +514,43 @@
 			document.getElementById(clone.id).appendChild(clone10);
 			document.getElementById(clone.id).appendChild(clone11);
 			document.getElementById(clone.id).appendChild(clone12);
-			document.getElementById(clone10.id).style.left="75%";
-			document.getElementById(clone11.id).style.left="76%";
-			document.getElementById(clone12.id).style.left="76%";
+			document.getElementById(clone10.id).style.left="370%";
+			document.getElementById(clone11.id).style.left="372%";
+			document.getElementById(clone12.id).style.left="372%";
 			document.getElementById(clone10.id).style.top=div_top+"%";
 			document.getElementById(clone11.id).style.top=div_h3+"%";
 			document.getElementById(clone12.id).style.top=div_h4+"%";
+			document.getElementById(clone10.id).style.position="absolute";
+			str="{{item_path_"+(i+3).toString();
+			str=str+"}}";
+			str=text_ar[i+2];
+			document.getElementById(clone.id).src=str;
+			document.getElementById(clone.id).classList="products_view";
+			document.getElementById(clone11.id).style.width="100%";
 			}
 			i=i+4;
 		}
+		/*const elem_1 = document.getElementById('Remove_if_Empty_div_2');
+		const clone_1 = elem_1.cloneNode(true);
+		clone_1.id='Remove_if_Empty_div_last';
+		document.getElementById("last_clone").appendChild(clone_1);
+		document.getElementById("Remove_if_Empty_div_last").style.position='absolute';
+		//document.getElementById("Remove_if_Empty_div_last").style.top='10%!important';
+		//document.getElementById("Remove_if_Empty_div_last").style.left='0%!important';
+		*/
 		var i;
 		//document.getElementById('Remove_if_Empty_h3_9').innerHTML='New shirt';
 		//document.getElementById('Remove_if_Empty_h4_9').innerHTML='$1';
 		//document.getElementById('Remove_if_Empty_div_1').src='{% static "Mencasual150620222.PNG" %}';
 		//document.getElementById("myImageId").src="newSource.png";
 		var tot_no_of_products=parseInt(document.getElementById('tot_no_products').textContent);
-		for(i=tot_no_of_products+1;i<=30;i++){
+		//document.getElementById('Remove_if_Empty_div_2').src={{item_path_2}};
+		for(i=tot_no_of_products+1;i<=100;i++){
 			var rm_str="Remove_if_Empty"+i;
 			var obj= document.getElementById(rm_str);
 			obj.remove();
 		}
-
+		
 	</script>
 	
 	</body>

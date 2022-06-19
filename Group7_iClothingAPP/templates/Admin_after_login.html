@@ -94,6 +94,14 @@
 			background-color:red;
 			position:absolute;
 		}
+		table{
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        th, td{
+            padding: 10px 20px;
+            border: 1px solid #000;
+        }
 	</style>
 	<div onclick='reload_homepage();' style='cursor:pointer;'>
 		<h3 style='font-style:italic;color:red;'>iCLOTHING</h3>
@@ -105,22 +113,23 @@
 		{% csrf_token %}
 		<b><p>Profile</p></b>
 		<br>
-		<button class='right-hover' style='font:20;width:60%;height:40%;border-color:white;cursor:pointer;'>Login/Register</button>
+		<button class='right-hover' style='font:20;width:60%;height:40%;border-color:white;cursor:pointer;'>Logout</button>
 	</form>
 		<form action='/Aboutcmpy/' method='post' >
 		{% csrf_token %}
-		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>About Company</button>
+		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Products Catalog</button>
 	</form>
-	<form action='/Aboutcmpy/' method='post' >
+	<form action='/upld_new/' method='post' >
 		{% csrf_token %}
-		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Contact Us</button>
+		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Upload New Products</button>
 	</form><form action='/cart_Login/' method='post'>
 		{% csrf_token %}
-		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Shopping Cart</button>
-	</form><form action='/cart_Login/' method='post'>
+		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>User View & items Update</button>
+	</form>
+	<!--<form action='/cart_Login/' method='post'>
 		{% csrf_token %}
 		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Orders</button>
-	</form>
+	</form>-->
 	
 	</div>
 	<br>
@@ -129,76 +138,9 @@
 		{% csrf_token %}
 		<input type='text' style='font:40;border-radius: 7px;width:200%;height:40px' placeholder='search'></button></form>
 	
-	<h2 id='tot_no_products' style='visibility:hidden'>2</h2>
+	<h2 id='tot_no_admin_req' style='visibility:hidden'>2</h2>
 	<br>
-	<div id='Remove_if_Empty1'>
-		<div class='products_view'>
-			{% load static %}
-			<img src='{% static "MenTshirt150620221.PNG" %}' style="width:100%;height:100%;"></img>
-		</div>
-		<h3 style='bottom:26%;position:absolute;'>H&M Men Pink Printed T-shirt</h3>
-		<h4 style='bottom:22%;position:absolute;'>Price: $15</h4>
-	</div>
-	<div id='Remove_if_Empty2'>
-		<div class='products_view' style='left:25%;'>
-		{% load static %}
-			<img src='{% static "Mencasual150620222.PNG" %}' style="width:100%;height:100%;"></img>
-		</div>
-		<h3 style='bottom:26%;position:absolute;left:26%;'>Casual Shirt</h3>
-		<h4 style='bottom:22%;position:absolute;left:26%;'>Price: $18</h4>
-	</div>
-	<div id='Remove_if_Empty3'>
-		<div class='products_view' style='left:50%;'>d-inline</div>
-		<h3 style='bottom:26%;position:absolute;left:51%;'>T-Shirt</h3>
-		<h4 style='bottom:22%;position:absolute;left:51%;'>Price: $20</h4>
-	</div>
-	<div id='Remove_if_Empty4'>
-		<div class='products_view' style='left:75%;'>d-inline</div>
-		<h3 style='bottom:26%;position:absolute;left:76%;'>T-Shirt</h3>
-		<h4 style='bottom:22%;position:absolute;left:76%;'>Price: $20</h4>
-	</div>
 	
-	<div id='Remove_if_Empty5'>
-		<div class='products_view' style='top:80%;position:absolute'>d-inline</div>
-		<h3 style='top:120%;position:absolute;'>T-Shirt</h3>
-		<h4 style='top:124%;position:absolute;'>Price: $20</h4>
-	</div>
-	<div id='Remove_if_Empty6'>
-		<div class='products_view' style='top:80%; position:absolute;left:25%'>d-inline</div>
-		<h3 style='top:120%;position:absolute;left:26%;'>T-Shirt</h3>
-		<h4 style='top:124%;position:absolute;left:26%;'>Price: $20</h4>
-	</div>
-	<div id='Remove_if_Empty7'>
-		<div class='products_view' style='top:80%;position:absolute;left:50%;'>d-inline</div>
-		<h3 style='top:120%;position:absolute;left:51%;'>T-Shirt</h3>
-		<h4 style='top:124%;position:absolute;left:51%;'>Price: $20</h4>
-	</div>
-	<div id='Remove_if_Empty8'>
-		<div class='products_view' style='top:80%;position:absolute;left:75%;'>d-inline</div>
-		<h3 style='top:120%;position:absolute;left:76%;'>T-Shirt</h3>
-		<h4 style='top:124%;position:absolute;left:76%;'>Price: $20</h4>
-	</div>
-	
-	<div id='Remove_if_Empty9'>
-		<div class='products_view' style='top:135%;position:absolute'>d-inline</div>
-		<h3 style='top:175%;position:absolute;'>T-Shirt</h3>
-		<h4 style='top:179%;position:absolute;'>Price: $20</h4>
-	</div>
-	<div id='Remove_if_Empty10'>
-		<div class='products_view' style='top:135%; position:absolute;left:25%'>d-inline</div>
-		<h3 style='top:175%;position:absolute;left:26%;'>T-Shirt</h3>
-		<h4 style='top:179%;position:absolute;left:26%;'>Price: $20</h4>
-	</div>
-	<div id='Remove_if_Empty11'>
-		<div class='products_view' style='top:135%;position:absolute;left:50%;'>d-inline</div>
-		<h3 style='top:175%;position:absolute;left:51%;'>T-Shirt</h3>
-		<h4 style='top:179%;position:absolute;left:51%;'>Price: $20</h4>
-	</div>
-	<div id='Remove_if_Empty12'>
-		<div class='products_view' style='top:135%;position:absolute;left:75%;'>d-inline</div>
-		<h3 style='top:175%;position:absolute;left:76%;'>T-Shirt</h3>
-		<h4 style='top:179%;position:absolute;left:76%;'>Price: $20</h4>
-	</div>
 	
 	<div class='categories_hover'>
 		<h2>Men</h2>
@@ -293,23 +235,229 @@
 		</div>
 	</div>
 	
-	<form action='/reload_hmpg_aft_login/' id='reload_hmpg_aft_login' method='post'>
+	<form action='/reload_admin_hmpg_aft_login/' id='reload_hmpg_aft_login' method='post'>
 		{% csrf_token %}
 		<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
 		
 	</form>
 	
+	{{done_stat}}
+	<h2>Please approve or reject the admin account requests:</h2>
+	<form action='/approve_reject/' id='approve_reject' method='post'>
+	{% csrf_token %}
+	<div id='approve_reject'>
+		<table border="2" id="Approve_reject_user"><tbody>
+		<tr><th width="75">S.No</th>
+		<th width="75">Username</th>
+		<th width="75">Email Id</th>
+		<th width="75">Approve</th>
+		<th width="75">Reject</th></tr>
+		<tr id='tr1'><td width="75">1</td>
+		<td id='us1' name='us' width="75">{{user_name_1}}</td>
+		<td width="75">{{Email_id_1}}</td>
+		<td width="85"><input id='ar' name='ar' value='1' type='radio' onclick="Updatetext(1,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' value='2' type='radio' onclick="Updatetext(1,'reject');"><label>Reject</label></td></tr>
+		<tr id='tr2'><td width="75">2</td>
+		<td id='us2' name='us' width="75">{{user_name_2}}</td>
+		<td width="75">{{Email_id_2}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(2,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(2,'reject');"><label>Reject</label></td></tr>
+		<tr id='tr3'><td width="75">3</td>
+		<td id='us3' name='us' width="75">{{user_name_3}}</td>
+		<td width="75">{{Email_id_3}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(3,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(3,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr4'><td width="75">4</td>
+		<td id='us4' name='us' width="75">{{user_name_4}}</td>
+		<td width="75">{{Email_id_4}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(4,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(4,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr5'><td width="75">5</td>
+		<td id='us5' name='us' width="75">{{user_name_5}}</td>
+		<td width="75">{{Email_id_5}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(5,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(5,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr6'><td width="75">6</td>
+		<td id='us6' name='us' width="75">{{user_name_6}}</td>
+		<td width="75">{{Email_id_6}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(6,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(6,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr7'><td width="75">7</td>
+		<td id='us7' name='us' width="75">{{user_name_7}}</td>
+		<td width="75">{{Email_id_7}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(7,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(7,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr8'><td width="75">8</td>
+		<td id='us8' name='us' width="75">{{user_name_8}}</td>
+		<td width="75">{{Email_id_8}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(8,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(8,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr9'><td width="75">9</td>
+		<td id='us9' name='us' width="75">{{user_name_9}}</td>
+		<td width="75">{{Email_id_9}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(9,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(9,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr10'><td width="75">10</td>
+		<td id='us10' name='us' width="75">{{user_name_10}}</td>
+		<td width="75">{{Email_id_10}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(10,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(10,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr11'><td width="75">11</td>
+		<td id='us11' name='us' width="75">{{user_name_11}}</td>
+		<td width="75">{{Email_id_11}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(11,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(11,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr12'><td width="75">12</td>
+		<td id='us12' name='us' width="75">{{user_name_12}}</td>
+		<td width="75">{{Email_id_12}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(12,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(12,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr13'><td width="75">13</td>
+		<td id='us13' name='us' width="75">{{user_name_13}}</td>
+		<td width="75">{{Email_id_13}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(13,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(13,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr14'><td width="75">14</td>
+		<td id='us14' name='us' width="75">{{user_name_14}}</td>
+		<td width="75">{{Email_id_14}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(14,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(14,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr15'><td width="75">15</td>
+		<td id='us15' name='us' width="75">{{user_name_15}}</td>
+		<td width="75">{{Email_id_15}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(15,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio'onclick="Updatetext(15,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr16'><td width="75">16</td>
+		<td id='us16' name='us' width="75">{{user_name_16}}</td>
+		<td width="75">{{Email_id_16}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(16,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(16,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr17'><td width="75">17</td>
+		<td id='us17' name='us' width="75">{{user_name_17}}</td>
+		<td width="75">{{Email_id_17}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(17,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(17,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr18'><td width="75">18</td>
+		<td id='us18' name='us' width="75">{{user_name_18}}</td>
+		<td width="75">{{Email_id_18}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(18,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(18,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr19'><td width="75">19</td>
+		<td id='us19' name='us' width="75">{{user_name_19}}</td>
+		<td width="75">{{Email_id_19}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(19,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(19,'reject');"><label>Reject</label></td>
+		</tr>
+		<tr id='tr20'><td width="75">20</td>
+		<td id='us20' name='us' width="75">{{user_name_20}}</td>
+		<td width="75">{{Email_id_20}}</td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(20,'approve');"><label>Approve</label></td>
+		<td width="85"><input id='ar' name='ar' type='radio' onclick="Updatetext(20,'reject');"><label>Reject</label></td>
+		</tr>
+		</tbody></table>
+	</div>
+	<h2 id='no_requests' >{{no_requests}}</h2>
+	<input type="text" id='user_stat' style="visibility:hidden;top:1%;position:absolute;" name='user_apr_rej' value='1'></input>
+	<br>
+	<button id='submit1' name='submit1'>Submit</button>
+	</form>
+	<h2 id='tot_no_users' style='visibility:hidden;'>{{total_no_users}}</h2>
 	<script>
 		function reload_homepage(){
-			document.getElementById('reload_hmpg_aft_login').submit();
+			document.getElementById('reload_admin_hmpg_aft_login').submit();
 		}
+		function Updatetext(us,stat){
+			var str=document.getElementById("Approve_reject_user").rows[us].cells[1].innerHTML;
+			document.getElementById('user_stat').value=str+' '+stat;
+		}
+		
+		var i;
+		var tot_no_of_products=parseInt(document.getElementById('tot_no_users').textContent);
+		//document.getElementById('Remove_if_Empty_div_2').src={{item_path_2}};
+		for(i=tot_no_of_products+1;i<=100;i++){
+			var rm_str="tr"+i.toString();
+			var obj= document.getElementById(rm_str);
+			obj.remove();
+		}
+		
+		/*
+		var myTableDiv = document.getElementById("myDynamicTable");
+
+		var table = document.createElement('TABLE');
+		table.border = '1';
+		var tableBody = document.createElement('TBODY');
+		table.appendChild(tableBody);
+		
+		var tr = document.createElement('TR');
+		tableBody.appendChild(tr);	
+		
+		var th = document.createElement('TH');
+		th.width = '75';
+		th.appendChild(document.createTextNode("S.No"));
+		tr.appendChild(th);
+		var th = document.createElement('TH');
+		th.width = '75';
+		th.appendChild(document.createTextNode("Username"));
+		tr.appendChild(th);
+		var th = document.createElement('TH');
+		th.width = '75';
+		th.appendChild(document.createTextNode("Email Id"));
+		tr.appendChild(th);
+		var th = document.createElement('TH');
+		th.width = '75';
+		th.appendChild(document.createTextNode("Approve"));
+		tr.appendChild(th);
+		var th = document.createElement('TH');
+		th.width = '75';
+		th.appendChild(document.createTextNode("Reject"));
+		tr.appendChild(th);
+		
+		for (var i = 0; i < 3; i++) {
+			var tr = document.createElement('TR');
+			tableBody.appendChild(tr);
+			
+			for (var j = 0; j < 5; j++) {
+				if(j<3){
+					var td = document.createElement('TD');
+					td.width = '75';
+					td.appendChild(document.createTextNode("Cell " + i + "," + j));
+					tr.appendChild(td);
+				}
+				else{
+					var td = document.createElement('TD');
+					td.width = '75';
+					td.appendChild(document.createTextNode("Cell " + i + "," + j));
+					//var newRadioButton=document.createElement(input(type='radio',name='radio',value='1st'));
+					//td.appendChild(document.createTextNode(newRadioButton);
+					tr.appendChild(td);
+				}
+			}
+		}
+		myTableDiv.appendChild(table);
+		
 		var i = 0;
 		var tot_no_of_products=parseInt(document.getElementById('tot_no_products').textContent);
 		for(i=tot_no_of_products+1;i<=12;i++){
 			var rm_str="Remove_if_Empty"+i;
 			var obj= document.getElementById(rm_str);
 			obj.remove();
-		}
+		}*/
 	</script>
 	
 	</body>
