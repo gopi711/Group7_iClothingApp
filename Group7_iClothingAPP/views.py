@@ -8,6 +8,12 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib import messages
 import cloudinary
 
+import smtplib,ssl
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+
 import mysql.connector
 from mysql.connector import Error
 
