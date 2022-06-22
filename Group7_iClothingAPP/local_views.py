@@ -45,12 +45,7 @@ def Homepage(request):
 	price=[]
 	item_path=[]
 	dict={}
-	'''
-	for root, dirs, files in os.walk(os.getcwd()):
-		if('Group7_iClothingAPP\\static\\' in root):
-			for file in files:
-				l.append(root+file)
-	'''
+	
 	try:
 		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')                                         
 		if connection.is_connected():
@@ -440,7 +435,7 @@ def upload_file(request):
 				#filename = fs.save('C:\Group7_iClothingAPP\static\Women', myfile)
 				uploaded_file_url = fs.url(filename)
 				dict['stat_new_item']='Item Successfully added to database.'
-				insrt_qry="insert into items values ("+str(name_no)+",'"+item_name+"','"+tab_dep_name+"','"+path+"','"+item_brand+"','"+item_size+"','"+str(item_price)+"','"+item_description+"',"+item_tot+"',"+item_del+");"
+				insrt_qry="insert into items values ("+str(name_no)+",'"+item_name+"','"+tab_dep_name+"','"+path+"','"+item_brand+"','"+item_size+"','"+str(item_price)+"','"+item_description+"',"+item_tot+","+item_del+");"
 				print(insrt_qry)
 				cursor.execute(insrt_qry)
 				connection.commit()

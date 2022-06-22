@@ -409,7 +409,7 @@ def upload_file(request):
 			#print(cld)
 			path=cld['secure_url']
 			dict['stat_new_item']='Item Successfully added to database.'
-			insrt_qry="insert into items values ("+str(name_no)+",'"+item_name+"','"+tab_dep_name+"','"+path+"','"+item_brand+"','"+item_size+"','"+str(item_price)+"','"+item_description+"',"+item_tot+"',"+item_del+");"
+			insrt_qry="insert into items values ("+str(name_no)+",'"+item_name+"','"+tab_dep_name+"','"+path+"','"+item_brand+"','"+item_size+"','"+str(item_price)+"','"+item_description+"',"+item_tot+","+item_del+");"
 			print(insrt_qry)
 			cursor.execute(insrt_qry)
 			connection.commit()
