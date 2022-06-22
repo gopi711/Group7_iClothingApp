@@ -782,65 +782,64 @@ def prod_catalog(request):
 		DATABASE_URL = os.environ.get('DATABASE_URL')
 		connection = psycopg2.connect(DATABASE_URL)
 		cursor = connection.cursor()
-			fetch_qry="select item_name,department_name,brand,size,price,description,no_of_items_available,no_of_days_item_deliver,item_no,item_path from items;"
-			cursor.execute(fetch_qry)
-			record=cursor.fetchall()
-			#print(record)
-			dict['total_no_items']=len(record)
-			for i in range(0,dict['total_no_items']):
-				dict['itnm'+str(i+1)]=record[i][0]
-				dict['dpt'+str(i+1)]=record[i][1]
-				dict['brnd'+str(i+1)]=record[i][2]
-				dict['size'+str(i+1)]=record[i][3]
-				dict['price'+str(i+1)]=record[i][4]
-				dict['des'+str(i+1)]=record[i][5]
-				dict['itmsavl'+str(i+1)]=record[i][6]
-				dict['itmsdel'+str(i+1)]=record[i][7]
-				dict['itno'+str(i+1)]=record[i][8]
+		fetch_qry="select item_name,department_name,brand,size,price,description,no_of_items_available,no_of_days_item_deliver,item_no,item_path from items;"
+		cursor.execute(fetch_qry)
+		record=cursor.fetchall()
+		#print(record)
+		dict['total_no_items']=len(record)
+		for i in range(0,dict['total_no_items']):
+			dict['itnm'+str(i+1)]=record[i][0]
+			dict['dpt'+str(i+1)]=record[i][1]
+			dict['brnd'+str(i+1)]=record[i][2]
+			dict['size'+str(i+1)]=record[i][3]
+			dict['price'+str(i+1)]=record[i][4]
+			dict['des'+str(i+1)]=record[i][5]
+			dict['itmsavl'+str(i+1)]=record[i][6]
+			dict['itmsdel'+str(i+1)]=record[i][7]
+			dict['itno'+str(i+1)]=record[i][8]
 			
-			item_no_str=''
-			item_name_str=''
-			dept_str=''
-			brnd_str=''
-			size_str=''
-			price_str=''
-			desc_str=''
-			avail_str=''
-			no_days_deliver_str=''
-			for i in range(0,len(record)):
-				item_no_str=item_no_str+str(dict['itno'+str(i+1)])+','
-				item_name_str=item_name_str+dict['itnm'+str(i+1)]+','
-				#print(dict['itnm'+str(i+1)])
-				dept_str=dept_str+dict['dpt'+str(i+1)]+','
-				brnd_str=brnd_str+dict['brnd'+str(i+1)]+','
-				size_str=size_str+dict['size'+str(i+1)]+','
-				price_str=price_str+dict['price'+str(i+1)]+','
-				desc_str=desc_str+dict['des'+str(i+1)]+','
-				avail_str=avail_str+str(dict['itmsavl'+str(i+1)])+','
-				no_days_deliver_str=no_days_deliver_str+str(dict['itmsdel'+str(i+1)])+','
+		item_no_str=''
+		item_name_str=''
+		dept_str=''
+		brnd_str=''
+		size_str=''
+		price_str=''
+		desc_str=''
+		avail_str=''
+		no_days_deliver_str=''
+		for i in range(0,len(record)):
+			item_no_str=item_no_str+str(dict['itno'+str(i+1)])+','
+			item_name_str=item_name_str+dict['itnm'+str(i+1)]+','
+			#print(dict['itnm'+str(i+1)])
+			dept_str=dept_str+dict['dpt'+str(i+1)]+','
+			brnd_str=brnd_str+dict['brnd'+str(i+1)]+','
+			size_str=size_str+dict['size'+str(i+1)]+','
+			price_str=price_str+dict['price'+str(i+1)]+','
+			desc_str=desc_str+dict['des'+str(i+1)]+','
+			avail_str=avail_str+str(dict['itmsavl'+str(i+1)])+','
+			no_days_deliver_str=no_days_deliver_str+str(dict['itmsdel'+str(i+1)])+','
+		
 			
-			
-			item_no_str=item_no_str[:len(item_no_str)-1]
-			item_name_str=item_name_str[:len(item_name_str)-1]
-			dept_str=dept_str[:len(dept_str)-1]
-			brnd_str=brnd_str[:len(brnd_str)-1]
-			size_str=size_str[:len(size_str)-1]
-			price_str=price_str[:len(price_str)-1]
-			desc_str=desc_str[:len(desc_str)-1]
-			avail_str=avail_str[:len(avail_str)-1]
-			no_days_deliver_str=no_days_deliver_str[:len(no_days_deliver_str)-1]
-
-			dict['item_no_str']=item_no_str
-			dict['item_name_str']=item_name_str
-			dict['dept_str']=dept_str
-			dict['brnd_str']=brnd_str
-			dict['size_str']=size_str
-			dict['price_str']=price_str
-			dict['desc_str']=desc_str
-			dict['avail_str']=avail_str
-			dict['no_days_deliver_str']=no_days_deliver_str
-			#print(dict)
-			return render(request,'Admin_product_catalog.html',dict)
+		item_no_str=item_no_str[:len(item_no_str)-1]
+		item_name_str=item_name_str[:len(item_name_str)-1]
+		dept_str=dept_str[:len(dept_str)-1]
+		brnd_str=brnd_str[:len(brnd_str)-1]
+		size_str=size_str[:len(size_str)-1]
+		price_str=price_str[:len(price_str)-1]
+		desc_str=desc_str[:len(desc_str)-1]
+		avail_str=avail_str[:len(avail_str)-1]
+		no_days_deliver_str=no_days_deliver_str[:len(no_days_deliver_str)-1]
+		dict['item_no_str']=item_no_str
+		dict['item_name_str']=item_name_str
+		dict['dept_str']=dept_str
+		dict['brnd_str']=brnd_str
+		dict['size_str']=size_str
+		dict['price_str']=price_str
+		dict['desc_str']=desc_str
+		dict['avail_str']=avail_str
+		dict['no_days_deliver_str']=no_days_deliver_str
+		#print(dict)
+		return render(request,'Admin_product_catalog.html',dict)
 	except Error as e:
 		print("Error while connecting to MySQL", e)
 	return render(request,'Admin_product_catalog.html',dict)
@@ -857,14 +856,14 @@ def prod_cat(request):
 		DATABASE_URL = os.environ.get('DATABASE_URL')
 		connection = psycopg2.connect(DATABASE_URL)
 		cursor = connection.cursor()
-			if('Delete' in data.split(',')[0]):
-				for i in list_tuples:
-					del_qry='Delete from items where item_no='+str(int(i[0]))+';'
-					cursor.execute(del_qry)
-			else:
-				for i in list_tuples:
-					upd_qry="Update items set item_name='"+i[1]+"', department_name='"+i[2]+"', brand='"+i[3]+"',  size='"+i[4]+"', price='"+i[5]+"', description='"+i[6]+"', no_of_items_available='"+str(i[7])+"', no_of_days_item_deliver='"+str(i[8])+"' where item_no="+str(int(i[0]))+";"
-					cursor.execute(upd_qry)
+		if('Delete' in data.split(',')[0]):
+			for i in list_tuples:
+				del_qry='Delete from items where item_no='+str(int(i[0]))+';'
+				cursor.execute(del_qry)
+		else:
+			for i in list_tuples:
+				upd_qry="Update items set item_name='"+i[1]+"', department_name='"+i[2]+"', brand='"+i[3]+"',  size='"+i[4]+"', price='"+i[5]+"', description='"+i[6]+"', no_of_items_available='"+str(i[7])+"', no_of_days_item_deliver='"+str(i[8])+"' where item_no="+str(int(i[0]))+";"
+				cursor.execute(upd_qry)
 		connection.commit()
 	except Error as e:
 		status='Product Catalog Update is not Successful, Please try again.'
