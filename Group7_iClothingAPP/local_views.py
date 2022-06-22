@@ -6,6 +6,12 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import logout, authenticate, login
 from django.contrib import messages
+import smtplib,ssl
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+
 
 import mysql.connector
 from mysql.connector import Error
@@ -223,9 +229,34 @@ def logout_request(request):
 def saved_Address(request):
 	usernm=request.POST.get('user_name1')
 	print(usernm)
+	dict={}
+	dict['user_name']=usernm
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			login_chk_qry='select address_street,address_apt,address_city,address_state,address_pincode,mobile_number,id from user_address where username="'+usernm+'";'
+			print(login_chk_qry)
+			cursor.execute(login_chk_qry)
+			record = cursor.fetchall()
+			print(record)
+			if(record is not None):
+				for i in range(len(record)):
+					dict['Apt_Street_'+str(i+1)]='Apt '+record[i][1]+', '+record[i][0]+','
+					dict['city_state_zip_'+str(i+1)]=record[i][2]+', '+record[i][3]+', '+record[i][4]+'.'
+					dict['mobile'+str(i+1)]=record[i][5]
+					dict['id'+str(i+1)]=record[i][6]
+				return render(request,'saved_Address.html',dict)
+	except Error as e:
+		print("Error while connecting to MySQL", e)
 	return render(request,'saved_Address.html',{'user_name':usernm})
 
 def add_Address(request):
+	print('Add Address')
 	usernm=request.POST.get('user_name1')
 	street=request.POST.get('street')
 	apt=request.POST.get('Apt')
@@ -233,6 +264,8 @@ def add_Address(request):
 	state=request.POST.get('state')
 	pincode=request.POST.get('pincode')
 	mobile=request.POST.get('mobile')
+	dict={}
+	dict['user_name']=usernm
 	try:
 		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
 		if connection.is_connected():
@@ -247,16 +280,36 @@ def add_Address(request):
 			record = cursor.fetchone()
 			print(record)
 			if(record[0]==1):
-				insert_qry="insert into user_address values('"+usernm+"','"+street+"','"+apt+"','"+city+"','"+state+"','"+pincode+"','"+mobile+"');"
-				print(insert_qry)
-				cursor.execute(insert_qry)
-				connection.commit()
-				return render(request,'saved_Address.html',{'user_name':usernm,'Status_of_address':'Address saved successfully'})
-			else:
-				return render(request,'saved_Address.html',{'user_name':usernm,'Status_of_address':'Address not saved successfully'})
+				login_chk_qry='select count(*) from user_address where username="'+usernm+'";'
+				print(login_chk_qry)
+				cursor.execute(login_chk_qry)
+				record = cursor.fetchone()
+				print(record)
+				id=record[0]+1
+				if(len(record)<6):
+					insert_qry="insert into user_address values("+str(id)+",'"+usernm+"','"+street+"','"+apt+"','"+city+"','"+state+"','"+pincode+"','"+mobile+"');"
+					print(insert_qry)
+					cursor.execute(insert_qry)
+					login_chk_qry='select address_street,address_apt,address_city,address_state,address_pincode,mobile_number,id from user_address where username="'+usernm+'";'
+					print(login_chk_qry)
+					cursor.execute(login_chk_qry)
+					record = cursor.fetchall()
+					connection.commit()
+					print(record)
+					if(record is not None):
+						for i in range(len(record)):
+							dict['Apt_Street_'+str(i+1)]='Apt '+record[i][1]+', '+record[i][0]+','
+							dict['city_state_zip_'+str(i+1)]=record[i][2]+', '+record[i][3]+', '+record[i][4]+'.'
+							dict['mobile'+str(i+1)]=record[i][5]
+							dict['id'+str(i+1)]=record[i][6]
+							dict['Status_of_address']='Address saved successfully'
+						return render(request,'saved_Address.html',dict)
+					else:
+						dict['Status_of_address']='Addresses are Full, Please delete any 1 address and add new Address'
+						return render(request,'saved_Address.html',{'user_name':usernm,'Status_of_address':'Addresses are Full, Please delete any 1 address and add new Address'})
 	except Error as e:
 		print("Error while connecting to MySQL", e)
-	return render(request,'saved_Address.html',{'user_name':usernm,'Status_of_address':'Address not saved successfully'})
+	return render(request,'saved_Address.html',{'user_name':usernm,'Status_of_address':'Address not saved successfully, Please try again'})
 
 def rld_hmpg_after_login(request):
 	usernm=request.POST.get('user_name1')
@@ -325,6 +378,7 @@ def upload_file(request):
 	item_price=request.POST.get('item_price')
 	item_description=request.POST.get('item_des')
 	item_tot=request.POST.get('item_tot')
+	item_del=request.POST.get('item_del')
 	
 	dict2={}
 	dict2['Men_top_wear']=['T Shirt','Casual Shirt','Men Sweaters','Suits','Jackets','Formal Shirt']
@@ -385,7 +439,7 @@ def upload_file(request):
 				#filename = fs.save('C:\Group7_iClothingAPP\static\Women', myfile)
 				uploaded_file_url = fs.url(filename)
 				dict['stat_new_item']='Item Successfully added to database.'
-				insrt_qry="insert into items values ("+str(name_no)+",'"+item_name+"','"+tab_dep_name+"','"+path+"','"+item_brand+"','"+item_size+"','"+str(item_price)+"','"+item_description+"',"+item_tot+");"
+				insrt_qry="insert into items values ("+str(name_no)+",'"+item_name+"','"+tab_dep_name+"','"+path+"','"+item_brand+"','"+item_size+"','"+str(item_price)+"','"+item_description+"',"+item_tot+"',"+item_del+");"
 				print(insrt_qry)
 				cursor.execute(insrt_qry)
 				connection.commit()
@@ -396,10 +450,500 @@ def upload_file(request):
 
 def open_cart(request):
 	usernm=request.POST.get('user_name1')
-	no_of_items_cart=request.POST.get('cart_val')
+	#no_of_items_cart=request.POST.get('cart_val')
 	item_paths=request.POST.get('cart_click')
-	
+	print(usernm)
+	#print(no_of_items_cart)
+	item_name=''
+	item_price=''
+	dict={}
+	dict['user_name']=usernm
+	item_paths=item_paths.split(',')
+	no_of_items_cart=len(item_paths)-1
+	query=[]
+	for i in range(0,len(item_paths)):
+		item_paths[i]=item_paths[i][item_paths[i].find('static')-1:]
+	print(item_paths)
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			login_chk_qry="select item_name,price,item_path,no_of_items_available,no_of_days_item_deliver,size from items;"
+			print(login_chk_qry)
+			cursor.execute(login_chk_qry)
+			record=cursor.fetchall()
+			#print(record)
+			k=0
+			if record[0] is not None:
+				for i in range(0,no_of_items_cart):
+					for j in range(0,len(record)):
+						if(k<no_of_items_cart):
+							if(item_paths[i]==record[j][2]):
+								k=k+1
+								print(record[j][2])
+								qry="insert into shopping_cart values('"+usernm+"','"+record[j][0]+"','"+record[j][2]+"','"+record[j][1]+"',1,"+str(record[j][4])+",'L');"
+								query.append(qry)
+				
+				print(query)
+				print('no_of_tems_in_cart:'+str(no_of_items_cart))
+				for i in range(0,len(query)):
+					cursor.execute(query[i])
+				query1="select item_name,item_path,item_price,quantity,no_of_days_item_deliver from shopping_cart where username='"+usernm+"';"
+				print(query1)
+				cursor.execute(query1)
+				record=cursor.fetchall()
+				print(record)
+				shp_crt_len=len(record)
+				dict['tot_cart_ord']=len(record)
+				for i in range(1,len(record)+1):
+					dict['item_name'+str(i)]=record[i-1][0]
+					dict['price'+str(i)]=record[i-1][2]
+					dict['q'+str(i)]=record[i-1][3]
+					dict['img_cart_path'+str(i)]=record[i-1][1]
+					dict['deliver'+str(i)]=str(record[i-1][4])+' Days to deliver'
+					qnt_chk=record[i-1][2]
+					if('$' in qnt_chk):
+						a=''
+						for m in qnt_chk:
+							if('$'==m):
+								pass
+							else:
+								a=a+str(m)
+						qnt_chk=float(a)
+					#print(qnt_chk)
+					dict['q_price'+str(i)]=float(qnt_chk*record[i-1][3])
+					#print(dict['q'+str(i)])
+					#print(dict['price'+str(i)])
+					#print(dict['q_price'+str(i)])
+				query1="select address_apt,address_street,address_city,address_state,address_pincode,mobile_number from user_address where id = (select max(id) from user_address where username='"+usernm+"');"
+				print(query1)
+				cursor.execute(query1)
+				record=cursor.fetchall()
+				print(record)
+				dict['user_def_address']=''
+				if len(record)==0:
+					dict['user_def_address']='Please add the delivery address from profile dropdown'
+				else:
+					for i in range(0,len(record)):
+						dict['add_'+str(i+1)]=''
+						for j in record[i]:
+							dict['add_'+str(i+1)]=dict['add_'+str(i+1)]+j+','
+						dict['add_'+str(i+1)]=dict['add_'+str(i+1)][:len(dict['add_'+str(i+1)])-1]
+				connection.commit()
+				img_cart_paths=''
+				price_str=''
+				item_name_str=''
+				qnt_str=''
+				del_str=''
+				q_pr_str=''
+				
+				for i in range(0,shp_crt_len):
+					img_cart_paths=img_cart_paths+dict['img_cart_path'+str(i+1)]+','
+					price_str=price_str+str(dict['price'+str(i+1)])+','
+					item_name_str=item_name_str+dict['item_name'+str(i+1)]+','
+					qnt_str=qnt_str+str(dict['q'+str(i+1)])+','
+					del_str=del_str+dict['deliver'+str(i+1)]+','
+					q_pr_str=q_pr_str+str(dict['q_price'+str(i+1)])+','
+				
+				img_cart_paths=img_cart_paths[:len(img_cart_paths)-1]
+				price_str=price_str[:len(price_str)-1]
+				item_name_str=item_name_str[:len(item_name_str)-1]
+				qnt_str=qnt_str[:len(qnt_str)-1]
+				del_str=del_str[:len(del_str)-1]
+				q_pr_str=q_pr_str[:len(q_pr_str)-1]
+				
+				dict['img_cart_paths']=img_cart_paths
+				dict['price_str']=price_str
+				dict['item_name_str']=item_name_str
+				dict['qnt_str']=qnt_str
+				dict['del_str']=del_str
+				dict['q_pr_str']=q_pr_str
+				tot_p=0.0
+				for i in range(0,shp_crt_len):
+					tot_p=tot_p+float(dict['q_price'+str(i+1)])
+				
+				tax=round(float(0.2*tot_p),2)
+				dict['tax_tot']=tax
+				dict['tot_p']=tot_p+tax
+				print(dict)
+				return render(request,'User_Shopping_Cart.html',dict)
+	except Error as e:
+		print("Error while connecting to MySQL", e)
 	return render(request,'User_Shopping_Cart.html')
+
+def update_addrs(request):
+	usernm=request.POST.get('user_name1')
+	add_inp=request.POST.get('Address_Any')
+	print(add_inp)
+	print(usernm)
+	add_inp=add_inp.split(',')
+	exec_qry=''
+	dict={}
+	for i in range(len(add_inp)):
+		add_inp[i]=add_inp[i].strip()
+	if(add_inp[0]=='Delete'):
+		exec_qry='Delete from user_address where id = '+add_inp[1]+';'
+	else:
+		exec_qry="Update user_address set address_street = '"+add_inp[3]+"',address_apt='"+add_inp[2]+"',address_city='"+add_inp[4]+"',address_state='"+add_inp[5]+"',address_pincode='"
+		exec_qry=exec_qry+add_inp[6][:add_inp[6].find('.')]+"',mobile_number='"+add_inp[6][add_inp[6].find('.')+1:]+"' where id = "+add_inp[1]+";"
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			print(exec_qry)
+			cursor.execute(exec_qry)
+			login_chk_qry='select address_street,address_apt,address_city,address_state,address_pincode,mobile_number,id from user_address where username="'+usernm+'";'
+			print(login_chk_qry)
+			cursor.execute(login_chk_qry)
+			record = cursor.fetchall()
+			print(record)
+			if(record is not None):
+				for i in range(len(record)):
+					dict['Apt_Street_'+str(i+1)]=record[i][1]+', '+record[i][0]+','
+					dict['city_state_zip_'+str(i+1)]=record[i][2]+', '+record[i][3]+', '+record[i][4]+'.'
+					dict['mobile'+str(i+1)]=record[i][5]
+					dict['id'+str(i+1)]=record[i][6]
+			connection.commit()
+			dict['Status_of_address']='Address Update or Delete Done'
+			return render(request,'saved_Address.html',dict)
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+	return render(request,'saved_Address.html',{'user_name':usernm,'Status_of_address':'Address Update or Delete Not Complete Successfully'})
+	
+def save_cart_checkout(request):
+	usernm=request.POST.get('user_name1')
+	print(usernm)
+	data=request.POST.get('all_data')
+	print(data)
+	dict={}
+	dict['user_name']=usernm
+	it_nm=''
+	it_pth=''
+	it_prce=''
+	qnt=0
+	it_del_days=0
+	sze=''
+	tot_no_valid_items=0
+	a=data
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			delete_qry="delete from shopping_cart where username='"+usernm+"';"
+			cursor.execute(delete_qry)
+			for i in range(0,len(data.split('(')[1:])):
+				it_nm=((a.split('(')[1:])[i].split(','))[0]
+				it_pth=((a.split('(')[1:])[i].split(','))[2]
+				it_pth=it_pth[it_pth.find('static')-1:]
+				it_prce=((a.split('(')[1:])[i].split(','))[5]
+				qnt=int(((a.split('(')[1:])[i].split(','))[3])
+				temp=((a.split('(')[1:])[i].split(','))[4]
+				it_del_days=int(temp[:temp.find(' ')])
+				sze=((a.split('(')[1:])[i].split(','))[1]
+				insrt_qry="insert into shopping_cart values('"+usernm+"','"+it_nm+"','"+it_pth+"','"+it_prce+"',"+str(qnt)+","+str(it_del_days)+",'"+sze+"');"
+				print(insrt_qry)
+				if(qnt==0):
+					pass
+				else:
+					cursor.execute(insrt_qry)
+					tot_no_valid_items=tot_no_valid_items+1
+			query1="select item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from shopping_cart where username='"+usernm+"';"
+			print(query1)
+			cursor.execute(query1)
+			record=cursor.fetchall()
+			print(record)
+			shp_crt_len=len(record)
+			dict['tot_cart_ord']=len(record)
+			for i in range(1,len(record)+1):
+				dict['item_name'+str(i)]=record[i-1][0]
+				dict['price'+str(i)]=record[i-1][2]
+				dict['q'+str(i)]=record[i-1][3]
+				dict['img_cart_path'+str(i)]=record[i-1][1]
+				dict['size_'+str(i)]=record[i-1][5]
+				dict['deliver'+str(i)]=str(record[i-1][4])+' Days to deliver'
+				qnt_chk=record[i-1][2]
+				if('$' in qnt_chk):
+					a=''
+					for m in qnt_chk:
+						if('$'==m):
+							pass
+						else:
+							a=a+str(m)
+					qnt_chk=float(a)
+				#print(qnt_chk)
+				dict['q_price'+str(i)]=float(qnt_chk*record[i-1][3])
+				#print(dict['q'+str(i)])
+				#print(dict['price'+str(i)])
+				#print(dict['q_price'+str(i)])size_select
+			query1="select address_apt,address_street,address_city,address_state,address_pincode,mobile_number from user_address where id = (select max(id) from user_address where username='"+usernm+"');"
+			print(query1)
+			cursor.execute(query1)
+			record=cursor.fetchall()
+			print(record)
+			dict['user_def_address']=''
+			if len(record)==0:
+				dict['user_def_address']='Please add the delivery address from profile dropdown'
+			else:
+				for i in range(0,len(record)):
+					dict['add_'+str(i+1)]=''
+					for j in record[i]:
+						dict['add_'+str(i+1)]=dict['add_'+str(i+1)]+j+','
+					dict['add_'+str(i+1)]=dict['add_'+str(i+1)][:len(dict['add_'+str(i+1)])-1]
+			connection.commit()
+			img_cart_paths=''
+			price_str=''
+			item_name_str=''
+			qnt_str=''
+			del_str=''
+			q_pr_str=''
+			size_select=''
+			
+			for i in range(0,shp_crt_len):
+				img_cart_paths=img_cart_paths+dict['img_cart_path'+str(i+1)]+','
+				price_str=price_str+str(dict['price'+str(i+1)])+','
+				item_name_str=item_name_str+dict['item_name'+str(i+1)]+','
+				qnt_str=qnt_str+str(dict['q'+str(i+1)])+','
+				del_str=del_str+dict['deliver'+str(i+1)]+','
+				q_pr_str=q_pr_str+str(dict['q_price'+str(i+1)])+','
+				size_select=size_select+dict['size_'+str(i+1)]+','
+			
+			img_cart_paths=img_cart_paths[:len(img_cart_paths)-1]
+			price_str=price_str[:len(price_str)-1]
+			item_name_str=item_name_str[:len(item_name_str)-1]
+			qnt_str=qnt_str[:len(qnt_str)-1]
+			del_str=del_str[:len(del_str)-1]
+			q_pr_str=q_pr_str[:len(q_pr_str)-1]
+			size_select=size_select[:len(size_select)-1]
+			
+			dict['img_cart_paths']=img_cart_paths
+			dict['price_str']=price_str
+			dict['item_name_str']=item_name_str
+			dict['qnt_str']=qnt_str
+			dict['del_str']=del_str
+			dict['q_pr_str']=q_pr_str
+			dict['size_select']=size_select
+			
+			tot_p=0.0
+			for i in range(0,shp_crt_len):
+				tot_p=tot_p+float(dict['q_price'+str(i+1)])
+			
+			tax=round(float(0.2*tot_p),2)
+			dict['tax_tot']=tax
+			dict['tot_p']=tot_p+tax
+			print(dict)
+			return render(request,'User_Shopping_Cart_Save.html',dict)
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+	return render(request,'User_Shopping_Cart_Save.html',{'user_name':usernm})
+
+def pay_page(request):
+	usernm=request.POST.get('user_name1')
+	return render(request,'payment_form.html',{'user_name':usernm})
+
+def del_ord_email(request):
+	usernm=request.POST.get('user_name1')
+	text='gopisairam999@gmail.com'
+	MY_ADDRESS=str(text)
+	#print(MY_ADDRESS)    
+	text='pqhylspdtjskergd'
+	PASSWORD=str(text)
+	#print(PASSWORD)
+	item_nm=''
+	item_qnt=''
+	itm_price=''
+	complete_str=''
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			fetch_qry="select item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from shopping_cart where username='"+usernm+"';"
+			cursor.execute(fetch_qry)
+			record=cursor.fetchall()
+			print(record)
+			for i in range(0,len(record)):
+				item_nm=record[i][0]
+				item_qnt=record[i][3]
+				itm_price=record[i][2]
+				complete_str=complete_str+item_nm+' '+str(item_qnt)+' '+itm_price+'\n'
+			print(complete_str)
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+		#print('before email')
+	
+	try:
+		context=ssl.create_default_context()
+		# set up the SMTP server
+		s = smtplib.SMTP(host='smtp.gmail.com', port=587)
+		s.ehlo()
+		s.starttls(context=context)
+		s.ehlo()
+		s.login(MY_ADDRESS, PASSWORD)
+
+		#Gmail SMTP server address: smtp.gmail.com
+		#Gmail SMTP port (TLS): 587.
+		#Gmail SMTP port (SSL): 465.
+
+		msg = MIMEMultipart()       # create a message
+
+		# setup the parameters of the message
+		msg['From']=MY_ADDRESS
+		msg['To']=MY_ADDRESS
+		print("To Address:",msg['To'])
+		text="Invoice of your Order"
+		msg['Subject']=str(text)
+		print(msg['Subject'])
+
+		msge=complete_str
+		msge=msge+"\n\nThanks,\niClothing Team"
+		message=str(msge)
+		# add in the message body
+		msg.attach(MIMEText(message, 'plain'))
+		print('sending mail')        
+		# send the message via the server set up earlier.
+		s.send_message(msg)
+		del msg
+
+		# Terminate the SMTP session and close the connection
+		s.quit()
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+		print("Some error occured and could not send mail. Sorry!")
+	
+	return render(request,'order_confirm.html',{'user_name':usernm})
+
+def prod_catalog(request):
+	usernm=request.POST.get('user_name1')
+	dict={}
+	dict['user_name']=usernm
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			fetch_qry="select item_name,department_name,brand,size,price,description,no_of_items_available,no_of_days_item_deliver,item_no,item_path from items;"
+			cursor.execute(fetch_qry)
+			record=cursor.fetchall()
+			#print(record)
+			dict['total_no_items']=len(record)
+			for i in range(0,dict['total_no_items']):
+				dict['itnm'+str(i+1)]=record[i][0]
+				dict['dpt'+str(i+1)]=record[i][1]
+				dict['brnd'+str(i+1)]=record[i][2]
+				dict['size'+str(i+1)]=record[i][3]
+				dict['price'+str(i+1)]=record[i][4]
+				dict['des'+str(i+1)]=record[i][5]
+				dict['itmsavl'+str(i+1)]=record[i][6]
+				dict['itmsdel'+str(i+1)]=record[i][7]
+				dict['itno'+str(i+1)]=record[i][8]
+			
+			item_no_str=''
+			item_name_str=''
+			dept_str=''
+			brnd_str=''
+			size_str=''
+			price_str=''
+			desc_str=''
+			avail_str=''
+			no_days_deliver_str=''
+			for i in range(0,len(record)):
+				item_no_str=item_no_str+str(dict['itno'+str(i+1)])+','
+				item_name_str=item_name_str+dict['itnm'+str(i+1)]+','
+				#print(dict['itnm'+str(i+1)])
+				dept_str=dept_str+dict['dpt'+str(i+1)]+','
+				brnd_str=brnd_str+dict['brnd'+str(i+1)]+','
+				size_str=size_str+dict['size'+str(i+1)]+','
+				price_str=price_str+dict['price'+str(i+1)]+','
+				desc_str=desc_str+dict['des'+str(i+1)]+','
+				avail_str=avail_str+str(dict['itmsavl'+str(i+1)])+','
+				no_days_deliver_str=no_days_deliver_str+str(dict['itmsdel'+str(i+1)])+','
+			
+			
+			item_no_str=item_no_str[:len(item_no_str)-1]
+			item_name_str=item_name_str[:len(item_name_str)-1]
+			dept_str=dept_str[:len(dept_str)-1]
+			brnd_str=brnd_str[:len(brnd_str)-1]
+			size_str=size_str[:len(size_str)-1]
+			price_str=price_str[:len(price_str)-1]
+			desc_str=desc_str[:len(desc_str)-1]
+			avail_str=avail_str[:len(avail_str)-1]
+			no_days_deliver_str=no_days_deliver_str[:len(no_days_deliver_str)-1]
+
+			dict['item_no_str']=item_no_str
+			dict['item_name_str']=item_name_str
+			dict['dept_str']=dept_str
+			dict['brnd_str']=brnd_str
+			dict['size_str']=size_str
+			dict['price_str']=price_str
+			dict['desc_str']=desc_str
+			dict['avail_str']=avail_str
+			dict['no_days_deliver_str']=no_days_deliver_str
+			#print(dict)
+			return render(request,'Admin_product_catalog.html',dict)
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+	return render(request,'Admin_product_catalog.html',dict)
+
+def prod_cat(request):
+	data=request.POST.get('all_data_ed_del')
+	print(data)
+	temp_data=data.split('(')[1:]
+	list_tuples=[]
+	status='Product Catalog Successfully Updated'
+	for i in temp_data:
+		list_tuples.append(i.split(',')[:-1])
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			if('Delete' in data.split(',')[0]):
+				for i in list_tuples:
+					del_qry='Delete from items where item_no='+str(int(i[0]))+';'
+					cursor.execute(del_qry)
+			else:
+				for i in list_tuples:
+					upd_qry="Update items set item_name='"+i[1]+"', department_name='"+i[2]+"', brand='"+i[3]+"',  size='"+i[4]+"', price='"+i[5]+"', description='"+i[6]+"', no_of_items_available='"+str(i[7])+"', no_of_days_item_deliver='"+str(i[8])+"' where item_no="+str(int(i[0]))+";"
+					cursor.execute(upd_qry)
+		connection.commit()
+	except Error as e:
+		status='Product Catalog Update is not Successful, Please try again.'
+		print("Error while connecting to MySQL", e)
+	return render(request,'Admin_product_catalog_status.html',{'status':status})
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
 
 

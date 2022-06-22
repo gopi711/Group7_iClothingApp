@@ -38,6 +38,12 @@ urlpatterns = [
 	path("upld_new/", views.upld_new),
 	path("upload_file/", views.upload_file),
 	path("open_cart/", views.open_cart),
+	path("update_addrs/", views.update_addrs),
+	path("save_cart_checkout/", views.save_cart_checkout),
+	path("pay_page/", views.pay_page),
+	path("del_ord_email/", views.del_ord_email),
+	path("prod_catalog/", views.prod_catalog),
+	path("prod_cat/", views.prod_cat),
 ]
 
 #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

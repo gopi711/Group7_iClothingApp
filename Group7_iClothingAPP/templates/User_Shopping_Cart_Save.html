@@ -259,7 +259,7 @@
 		<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
 		
 	</form>
-<!--	<h3 style='left:0%;position:absolute;top:13%'>Delivery Address:</h3>
+	<h3 style='left:0%;position:absolute;top:13%'>Delivery Address:</h3>
 	<div id='address_display_1' value='1' style='left:13%;position:absolute;top:16%'>
 	<select id='sel_addrss' name='sel_addrss'>
 		<option> Select an Address from Below or add a new Address in profile</option>
@@ -270,10 +270,10 @@
 		<option >{{add_5}}</option>
 		<option >{{add_6}}</option>
 	</select>
-	</div>--><br>
-	<h2> Items in Shopping Cart:</h2>
+	</div>
+	<h4> Review and click on Checkout with out updating any items or go to shopping cart to update:</h4>
 	
-	<form action='/save_cart_checkout/' id='save_cart_checkout' method='post'>
+	<form action='/pay_page/' id='pay_page' method='post'>
 	{% csrf_token %}
 	<div id='cart_itms' style='margin: 20px;padding: 40px;border-radius: 7px;background-color:white;width:40%;left:10%;position:absolute;top:30%'>
 		{% load static %}
@@ -317,6 +317,7 @@
 	<textarea rows='100' cols='60' id='t4' style="position:absolute;top:1%;visibility:hidden;">{{qnt_str}}</textarea>
 	<textarea rows='100' cols='60' id='t5' style="position:absolute;top:1%;visibility:hidden;">{{del_str}}</textarea>
 	<textarea rows='100' cols='60' id='t6' style="position:absolute;top:1%;visibility:hidden;">{{q_pr_str}}</textarea>
+	<textarea rows='100' cols='60' id='t7' style="position:absolute;top:1%;visibility:hidden;">{{size_select}}</textarea>
 	
 	
 	<div id='price_det' name='price_det' style='margin: 20px;padding: 40px;border-radius: 7px;background-color:lightgrey;width:23%;right:3%;top:20%;height:70%;position:absolute'>
@@ -348,8 +349,8 @@
 	<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
 	</form>
 	
-	<button class='button' id='save1' onclick='save_the_cart();' style='color:white;border-radius: 12px;background-color:cherry;right:15%;position:absolute;top:65%'>Save</button>
-	<button class='button' id='chcout1' onclick='checkout_cart();' style='visibility:hidden;color:white;border-radius: 12px;background-color:orange;right:5%;position:absolute;top:35%'>CheckOut</button>
+	<button class='button' id='save1' onclick='save_the_cart();' style='visibility:hidden;color:white;border-radius: 12px;background-color:cherry;right:15%;position:absolute;top:35%'>Save</button>
+	<button class='button' id='chcout1' onclick='checkout_cart();' style='color:white;border-radius: 12px;background-color:orange;right:5%;position:absolute;top:35%'>CheckOut</button>
 	
 	<script>
 		function reload_homepage(){
@@ -362,6 +363,7 @@
 		var text_ar4=(document.getElementById("t4").value).split(',');
 		var text_ar5=(document.getElementById("t5").value).split(',');
 		var text_ar6=(document.getElementById("t6").value).split(',');
+		var text_ar7=(document.getElementById("t7").value).split(',');
 		
 		document.getElementById('img1').src=text_ar2[0];
 		function increment(id){
@@ -510,6 +512,9 @@
 			document.getElementById('delivery'+i.toString()).innerHTML=text_ar5[i-1];
 			document.getElementById(clone1.id).src=text_ar2[i-1];
 			
+			document.getElementById('size_1').value=text_ar7[0];
+			document.getElementById('size_'+i.toString()).value=text_ar7[i-1];
+			
 			i=i+1;
 		}
 		i=2;
@@ -570,7 +575,6 @@
 			obj6.remove();
 			obj7.remove();
 		}
-
 		function save_the_cart(){
 			document.getElementById('type_save_chckout').value='Save';
 			var tot=document.getElementById('tot_cart_ord').value;
@@ -596,10 +600,7 @@
 			document.getElementById('save_cart_checkout').submit();
 		}
 		function checkout_cart(){
-			document.getElementById('type_save_chckout').value='CheckOut';
-			document.getElementById('all_data').value='';
-			var tot=document.getElementById('tot_cart_ord').value;
-			document.getElementById('save_cart_checkout').submit();
+			document.getElementById('pay_page').submit();
 		}
 	</script>
 	

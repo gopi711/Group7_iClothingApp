@@ -94,33 +94,43 @@
 			background-color:red;
 			position:absolute;
 		}
+		table{
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        th, td{
+            padding: 10px 20px;
+            border: 1px solid #000;
+        }
 	</style>
 	<div onclick='reload_homepage();' style='cursor:pointer;'>
 		<h3 style='font-style:italic;color:red;'>iCLOTHING</h3>
 		<p style='font-size:10px;top:5%;position:absolute;color:orange;'>Fashion Store </p>
 	</div>
+	
 	<div class='grow'>
-	<form action='/Logout/' method='post'>
+	<form action='/Login/' method='post'>
 		{% csrf_token %}
 		<b><p>{{user_name}}</p></b>
 		<br>
 		<button class='right-hover' style='font:20;width:60%;height:40%;border-color:white;cursor:pointer;'>Logout</button>
 	</form>
-		<form action='/Address/' method='post' >
+		<form action='/Aboutcmpy/' method='post' >
 		{% csrf_token %}
-		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Saved Addresses</button>
-		<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
+		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Products Catalog</button>
 	</form>
-	<form action='/Aboutcmpy/' method='post' >
+	<form action='/upld_new/' method='post' >
 		{% csrf_token %}
-		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Edit Profile</button>
+		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Upload New Products</button>
 	</form><form action='/cart_Login/' method='post'>
 		{% csrf_token %}
-		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Shopping Cart</button>
-	</form><form action='/cart_Login/' method='post'>
+		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>User View & items Update</button>
+	</form>
+	<!--<form action='/cart_Login/' method='post'>
 		{% csrf_token %}
 		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Orders</button>
-	</form>
+	</form>-->
+	
 	</div>
 	<br>
 	<hr>
@@ -128,9 +138,9 @@
 		{% csrf_token %}
 		<input type='text' style='font:40;border-radius: 7px;width:200%;height:40px' placeholder='search'></button></form>
 	
-	<h2 id='tot_no_products' style='visibility:hidden'>2</h2>
+	<h2 id='tot_no_admin_req' style='visibility:hidden'>2</h2>
+	<br>
 	
-	<h3 id='stat_new_item' name='stat_new_item'>{{stat_new_item}}</h3>
 	
 	<div class='categories_hover'>
 		<h2>Men</h2>
@@ -225,175 +235,21 @@
 		</div>
 	</div>
 	
-	<!--
-	<form action='/upload_file/' method='post' class="post-form" enctype="multipart/form-data">
-		{% csrf_token %}
-		{{ form.as_p }}
-		<input type="file"  accept="image/gif, image/jpeg, image/png" name="file1" id="file1" onchange='update_text_files(event);'>
-		<!--<input type='file' name="file1" id="file1" onchange='update_text_files();'>
-		<input type='text' id='get_files' name='get_files'>
-		<img id="output" src='' width="200" />
-		<button id='up_file' name='up_file'>Upload</button>
-	</form>
-	-->
-	
-	<form method="post" enctype="multipart/form-data" action='/upload_file/'>
-		{% csrf_token %}
-	<h2>Upload New item to the database</h2>
-	<label>Enter the name of Item:</label>
-	<input type='text' id='item_name' name='item_name' placeholder='Enter the Item Name'><br><br>
-	<label>Select any one Category from the 3 lists given:</label>
-	<select name="category1" id="category1">
-	  <option value="select">Men</option>
-	  <optgroup label="Men">
-	  <optgroup label="Top Wear">
-      <option value="T Shirt">T Shirt</option>
-      <option value="Casual Shirt">Casual Shirt</option>
-	  <option value="Formal Shirt">Men Sweaters</option>
-	  <option value="Suits">Suits</option>
-	  <option value="Jackets">Jackets</option>
-	  <option value="Formal Shirt">Formal Shirt</option>
-	  </optgroup>
-    </optgroup>
-    <optgroup label="Indian and Festive Wear">
-      <option value="Kurtas">Men Kurtas</option>
-      <option value="Sherwanis">Sherwanis</option>
-	  <option value="Dhothis">Dhothis</option>
-    </optgroup>
-	<optgroup label="Bottom Wear">
-      <option value="Jeans">Men Jeans</option>
-      <option value="Track Pants">Track Pants</option>
-	  <option value="Boxers">Boxers</option>
-	  <option value="Shorts">Shorts</option>
-    </optgroup>
-	<optgroup label="Foot Wear">
-      <option value="Shoes">Shoes</option>
-      <option value="Flip Flops">Flip Flops</option>
-	  <option value="Sandals">Sandals</option>
-	  <option value="Socks">Men Socks</option>
-    </optgroup>
-  </select>
-  <select name="category2" id="category2">
-	  <option value="select">Women</option>
-	  <optgroup label="Women">
-	  <optgroup label="Fusion Wear">
-      <option value="Sarees">Sarees</option>
-      <option value="Kurtas2">Women Kurtas</option>
-	  <option value="Leggings_Churidars">Leggings & Churidars</option>
-	  <option value="Skirts">Skirts</option>
-	  <option value="Lehanga">Lehenga</option>
-	  <option value="Dupattas">Dupattas</option>
-	  </optgroup>
-    </optgroup>
-    <optgroup label="Western Wear">
-      <option value="dresses">Women Dresses</option>
-      <option value="Tops">Women Tops</option>
-	  <option value="Sweaters2">Women Sweaters</option>
-    </optgroup>
-	<optgroup label="Beauty and Personal Care">
-      <option value="Makeup">Makeup</option>
-      <option value="Skin care">Skin Care</option>
-	  <option value="Lipsticks">Lipsticks</option>
-	  <option value="Fragrences">Fragrences</option>
-    </optgroup>
-	<optgroup label="Foot Wear">
-      <option value="Casual Shoes">Casual Shoes</option>
-      <option value="Flats">Flats</option>
-	  <option value="Heels">Heels</option>
-	  <option value="Sports Shoes">Women Sports Shoes</option>
-    </optgroup>
-  </select>
-  <select name="category3" id="category3">
-	  <option value="select">Kids</option>
-	  <optgroup label="Kids">
-	  <optgroup label="Infants">
-      <option value="Body Suites">Body Suites
-	  </option>
-      <option value="Dresses3">Kids Dresses</option>
-	  <option value="Winter Wear">Winter Wear</option>
-	  <option value="Inner Wear">Inner Wear</option>
-	  <option value="Tshirts3">Tshirts</option>
-	  <option value="Rompers">Rompers</option>
-	  </optgroup>
-    </optgroup>
-    <optgroup label="Boys Clothing">
-      <option value="Shirts3">Shirts</option>
-      <option value="Ethnic Wear">Ethnic Wear</option>
-	  <option value="Jeans3">Jeans</option>
-	  <option value="Sweaters3">Kids Sweaters</option>
-    </optgroup>
-	<optgroup label="Girls Clothing">
-      <option value="Tops3">Tops</option>
-      <option value="TShirt3">TShirt</option>
-	  <option value="Dresses3">Dresses</option>
-	  <option value="Party wear3">Party wear</option>
-    </optgroup>
-	<optgroup label="Foot Wear">
-      <option value="School Shoes">School Shoes</option>
-      <option value="Sports Shoes3">Sports Shoes</option>
-	  <option value="Socks3">Socks</option>
-    </optgroup>
-  </select><br><br>
-  <label>Enter the Price:</label>
-  <input type='text' id='item_price' name='item_price' placeholder='Enter the Item Price in $'>
-  <br><br>
-   <label>Enter the Brand name:</label>
-  <input type='text' id='item_Brand' name='item_brand' placeholder='Enter the Item Brand'>
-  <br><br>
-    <label>Mention the Size of item:</label>
-  <input type='text' id='item_size' name='item_size' placeholder='Size either XS,S,M,L,XL'>
-  <br><br>
-    <label>Enter the Description:</label>
-  <input type='text' id='item_des' name='item_des' placeholder='Enter the Item description'>
-    <br><br>
-    <label>Total number of items:</label>
-  <input type='text' id='item_tot' name='item_tot' placeholder='Number of Items in Catalog'>
-  <br><br>
-    <label>Delivery in how many days:</label>
-  <input type='text' id='item_del' name='item_del' placeholder='Specify in how many days item will be delivered'>
-<br><br><br><br>
-	<b><label> Choose the file from your device to Upload to the Application:</label></b>
-	<input type="file" name="myfile"><br><br>
-	<b><label> Click on Upload button so the item will directly upload to the database:</label></b>
-	<button type="submit">Upload</button>
-	</form>
-
-  
-	<form action='/reload_hmpg_aft_login/' id='reload_hmpg_aft_login' method='post'>
+	<form action='/reload_admin_hmpg_aft_login/' id='reload_hmpg_aft_login' method='post'>
 		{% csrf_token %}
 		<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
 		
 	</form>
-	{% load static %}
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.5/p5.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.5/addons/p5.dom.js"></script>		
-			
+	
+	
+	<h1>Product Catalog - Update Status Page:</h1>
+	<br>
+	<h2>{{status}}</h2>
+	
+	
 	<script>
 		function reload_homepage(){
-			document.getElementById('reload_hmpg_aft_login').submit();
-		}
-		var update_text_files=function(event){
-			document.getElementById('get_files').value=document.getElementById('file1').value;
-			var image = document.getElementById('output');
-			image.src = URL.createObjectURL(event.target.files[0]);
-			//document.getElementById('get_files').value=document.getElementById('output').src;
-		}
-		/*function update_text_files(){
-			document.getElementById('get_files').value=document.getElementById('file1').value;
-			var input = document.getElementById("get_files");
-			var fReader = new FileReader();
-			fReader.readAsDataURL(input.files[0]);
-			fReader.onloadend = function(event){
-				var img = document.getElementById("img_display");
-				img.src = event.target.result;
-			}
-		}*/
-		var i = 0;
-		var tot_no_of_products=parseInt(document.getElementById('tot_no_products').textContent);
-		for(i=tot_no_of_products+1;i<=12;i++){
-			var rm_str="Remove_if_Empty"+i;
-			var obj= document.getElementById(rm_str);
-			obj.remove();
+			document.getElementById('reload_admin_hmpg_aft_login').submit();
 		}
 	</script>
 	

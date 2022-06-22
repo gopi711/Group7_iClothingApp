@@ -132,9 +132,9 @@
 	
 	<form action='/open_cart/' id='open_cart' method='post'>
 	{% csrf_token %}
-	<div id='cart' name='cart' onclick="document.getElementById('open_cart').submit()" style="position:absolute:top:0%;right:1%;background-color:white;width:10%;height:10%;">
+	<div id='cart' name='cart' style="position:absolute:top:0%;right:1%;background-color:white;width:10%;height:10%;">
 		{% load static %}
-		<img src='{% static "shopping-cart-logo.jpg" %}' style='position:absolute;top:1%;height:10%;right:10%;cursor:pointer;'></img>
+		<img src='{% static "shopping-cart-logo.jpg" %}' onclick="document.getElementById('open_cart').submit()" style='position:absolute;top:1%;height:10%;right:10%;cursor:pointer;'></img>
 		<h6 style='position:absolute;top:0%;height:10%;right:10.5%;cursor:pointer;color:red;' id='cart_val' name='cart_val'>0</h6>
 		<input type='text' id='cart_click'  style='visibility:hidden' name='cart_click'></input>
 		<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
@@ -371,6 +371,7 @@
 		
 	</form>
 	
+		
 	<script>
 		function reload_homepage(){
 			document.getElementById('reload_hmpg_aft_login').submit();
