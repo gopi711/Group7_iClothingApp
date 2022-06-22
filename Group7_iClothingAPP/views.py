@@ -203,7 +203,7 @@ def saved_Address(request):
 		DATABASE_URL = os.environ.get('DATABASE_URL')
 		connection = psycopg2.connect(DATABASE_URL)
 		cursor = connection.cursor()
-		login_chk_qry='select address_street,address_apt,address_city,address_state,address_pincode,mobile_number,id from user_address where username="'+usernm+'";'
+		login_chk_qry="select address_street,address_apt,address_city,address_state,address_pincode,mobile_number,id from user_address where username='"+usernm+"';"
 		print(login_chk_qry)
 		cursor.execute(login_chk_qry)
 		record = cursor.fetchall()
@@ -545,7 +545,7 @@ def update_addrs(request):
 	for i in range(len(add_inp)):
 		add_inp[i]=add_inp[i].strip()
 	if(add_inp[0]=='Delete'):
-		exec_qry='Delete from user_address where id = '+add_inp[1]+';'
+		exec_qry="Delete from user_address where id = "+add_inp[1]+";"
 	else:
 		exec_qry="Update user_address set address_street = '"+add_inp[3]+"',address_apt='"+add_inp[2]+"',address_city='"+add_inp[4]+"',address_state='"+add_inp[5]+"',address_pincode='"
 		exec_qry=exec_qry+add_inp[6][:add_inp[6].find('.')]+"',mobile_number='"+add_inp[6][add_inp[6].find('.')+1:]+"' where id = "+add_inp[1]+";"
@@ -555,7 +555,7 @@ def update_addrs(request):
 		cursor = connection.cursor()
 		print(exec_qry)
 		cursor.execute(exec_qry)
-		login_chk_qry='select address_street,address_apt,address_city,address_state,address_pincode,mobile_number,id from user_address where username="'+usernm+'";'
+		login_chk_qry="select address_street,address_apt,address_city,address_state,address_pincode,mobile_number,id from user_address where username='"+usernm+"';"
 		print(login_chk_qry)
 		cursor.execute(login_chk_qry)
 		record = cursor.fetchall()
@@ -858,7 +858,7 @@ def prod_cat(request):
 		cursor = connection.cursor()
 		if('Delete' in data.split(',')[0]):
 			for i in list_tuples:
-				del_qry='Delete from items where item_no='+str(int(i[0]))+';'
+				del_qry="Delete from items where item_no="+str(int(i[0]))+';'
 				cursor.execute(del_qry)
 		else:
 			for i in list_tuples:
