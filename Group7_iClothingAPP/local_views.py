@@ -45,7 +45,8 @@ def Homepage(request):
 	price=[]
 	item_path=[]
 	dict={}
-	'''for root, dirs, files in os.walk(os.getcwd()):
+	'''
+	for root, dirs, files in os.walk(os.getcwd()):
 		if('Group7_iClothingAPP\\static\\' in root):
 			for file in files:
 				l.append(root+file)
