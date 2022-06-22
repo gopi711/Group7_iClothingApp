@@ -240,13 +240,13 @@ def add_Address(request):
 		DATABASE_URL = os.environ.get('DATABASE_URL')
 		connection = psycopg2.connect(DATABASE_URL)
 		cursor = connection.cursor()
-		login_chk_qry='select count(*) from user_login where username="'+usernm+'";'
+		login_chk_qry="select count(*) from user_login where username='"+usernm+"';"
 		print(login_chk_qry)
 		cursor.execute(login_chk_qry)
 		record = cursor.fetchone()
 		print(record)
 		if(record[0]==1):
-			login_chk_qry='select count(*) from user_address where username="'+usernm+'";'
+			login_chk_qry="select count(*) from user_address where username='"+usernm+"';"
 			print(login_chk_qry)
 			cursor.execute(login_chk_qry)
 			record = cursor.fetchone()
@@ -256,7 +256,7 @@ def add_Address(request):
 				insert_qry="insert into user_address values("+str(id)+",'"+usernm+"','"+street+"','"+apt+"','"+city+"','"+state+"','"+pincode+"','"+mobile+"');"
 				print(insert_qry)
 				cursor.execute(insert_qry)
-				login_chk_qry='select address_street,address_apt,address_city,address_state,address_pincode,mobile_number,id from user_address where username="'+usernm+'";'
+				login_chk_qry="select address_street,address_apt,address_city,address_state,address_pincode,mobile_number,id from user_address where username='"+usernm+"';"
 				print(login_chk_qry)
 				cursor.execute(login_chk_qry)
 				record = cursor.fetchall()
