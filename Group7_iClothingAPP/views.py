@@ -191,6 +191,7 @@ def login_request(request):
 		except:
 			login_invalid='Invalid Credentials'
 	except Error as e:
+		login_invalid='Not Successfully Logged in'
 		print("Error while connecting to MySQL : ", e)
 	return render(request,'LoginPage.html',{'login_invalid':login_invalid})
 
