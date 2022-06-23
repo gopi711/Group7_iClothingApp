@@ -146,6 +146,7 @@ def login_request(request):
 	price=[]
 	item_path=[]
 	dict={}
+	login_invalid='UnSuccessful Login'
 	try:
 		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
 		if connection.is_connected():
@@ -183,12 +184,13 @@ def login_request(request):
 						if(count_imgs>1000):
 							count_imgs=1000
 						dict['total_no_products']=count_imgs
-						dict['total_no_products']=22
+						#dict['total_no_products']=22
 						dict['user_name']=login_usr
 						#print(dict)
 						return render(request,'User_after_login.html',dict)
 					elif(record[1]=='Admin'):
 						dict={}
+						dict['user_name']=login_usr
 						login_chk_qry="select username,email_id from user_login where account_type='Admin' and account_status='Inactive';"
 						cursor.execute(login_chk_qry)
 						record=cursor.fetchall()
@@ -197,8 +199,32 @@ def login_request(request):
 							dict['user_name_'+str(i)]=record[i-1][0]
 							dict['Email_id_'+str(i)]=record[i-1][1]
 						dict['total_no_users']=len(record)
+						
 						if(len(record)==0):
 							dict['no_requests']='No requests Approval Pending'
+						
+						#ord_chck_qry='select order_id,username,item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders limit 20;'
+						#ord_chck_qry='select order_id,username,item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders;'
+						ord_chck_qry="select order_id,username,item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders where status='Not Placed';"
+						print(ord_chck_qry)
+						cursor.execute(ord_chck_qry)
+						record=cursor.fetchall()
+						dict['tot_orders']=len(record)
+						print(record)
+						for i in range(0,len(record)):
+							dict['od'+str(i+1)]=record[i][1]
+							dict['us'+str(i+1)]=record[i][0]
+							dict['itm'+str(i+1)]=record[i][2]
+							dict['ppq'+str(i+1)]=record[i][4]
+							dict['qn'+str(i+1)]=record[i][5]
+							dict['sz'+str(i+1)]=record[i][7]
+							tia_chk="select no_of_items_available from items where item_path='"+record[i][3]+"';"
+							print(tia_chk)
+							try:
+								cursor.execute(tia_chk)
+								dict['tia'+str(i+1)]=cursor.fetchone()[0]
+							except:
+								dict['tia'+str(i+1)]=0
 						print(dict)
 						return render(request,'Admin_after_login.html',dict)
 					else:
@@ -209,11 +235,6 @@ def login_request(request):
 				login_invalid='Invalid Credentials'
 	except Error as e:
 		print("Error while connecting to MySQL : ", e)
-	finally:
-		if (connection.is_connected()):
-			cursor.close()
-			connection.close()
-			print("MySQL connection is closed")
 	return render(request,'LoginPage.html',{'login_invalid':login_invalid})
 
 def retrieve_cred(request):
@@ -270,13 +291,13 @@ def add_Address(request):
 			cursor = connection.cursor()
 			cursor.execute("select database();")
 			record = cursor.fetchone()
-			login_chk_qry='select count(*) from user_login where username="'+usernm+'";'
+			login_chk_qry="select count(*) from user_login where username='"+usernm+"';"
 			print(login_chk_qry)
 			cursor.execute(login_chk_qry)
 			record = cursor.fetchone()
 			print(record)
 			if(record[0]==1):
-				login_chk_qry='select count(*) from user_address where username="'+usernm+'";'
+				login_chk_qry="select max(id) from user_address where username='"+usernm+"';"
 				print(login_chk_qry)
 				cursor.execute(login_chk_qry)
 				record = cursor.fetchone()
@@ -488,7 +509,8 @@ def open_cart(request):
 				print('no_of_tems_in_cart:'+str(no_of_items_cart))
 				for i in range(0,len(query)):
 					cursor.execute(query[i])
-				query1="select item_name,item_path,item_price,quantity,no_of_days_item_deliver from shopping_cart where username='"+usernm+"';"
+				#query1="select item_name,item_path,item_price,quantity,no_of_days_item_deliver from shopping_cart where username='"+usernm+"';"
+				query1="select sc1.item_name,sc1.item_path,sc1.item_price,sc1.quantity,sc1.no_of_days_item_deliver,it1.no_of_items_available from shopping_cart sc1,items it1 where sc1.item_path=it1.item_path and username='"+usernm+"';"
 				print(query1)
 				cursor.execute(query1)
 				record=cursor.fetchall()
@@ -501,6 +523,7 @@ def open_cart(request):
 					dict['q'+str(i)]=record[i-1][3]
 					dict['img_cart_path'+str(i)]=record[i-1][1]
 					dict['deliver'+str(i)]=str(record[i-1][4])+' Days to deliver'
+					dict['chck_max'+str(i)]=str(record[i-1][5])
 					qnt_chk=record[i-1][2]
 					if('$' in qnt_chk):
 						a=''
@@ -536,6 +559,7 @@ def open_cart(request):
 				qnt_str=''
 				del_str=''
 				q_pr_str=''
+				chck_max_str=''
 				
 				for i in range(0,shp_crt_len):
 					img_cart_paths=img_cart_paths+dict['img_cart_path'+str(i+1)]+','
@@ -544,6 +568,7 @@ def open_cart(request):
 					qnt_str=qnt_str+str(dict['q'+str(i+1)])+','
 					del_str=del_str+dict['deliver'+str(i+1)]+','
 					q_pr_str=q_pr_str+str(dict['q_price'+str(i+1)])+','
+					chck_max_str=chck_max_str+str(dict['chck_max'+str(i+1)])+','
 				
 				img_cart_paths=img_cart_paths[:len(img_cart_paths)-1]
 				price_str=price_str[:len(price_str)-1]
@@ -551,6 +576,7 @@ def open_cart(request):
 				qnt_str=qnt_str[:len(qnt_str)-1]
 				del_str=del_str[:len(del_str)-1]
 				q_pr_str=q_pr_str[:len(q_pr_str)-1]
+				chck_max_str=chck_max_str[:len(chck_max_str)-1]
 				
 				dict['img_cart_paths']=img_cart_paths
 				dict['price_str']=price_str
@@ -558,6 +584,7 @@ def open_cart(request):
 				dict['qnt_str']=qnt_str
 				dict['del_str']=del_str
 				dict['q_pr_str']=q_pr_str
+				dict['chck_max_str']=chck_max_str
 				tot_p=0.0
 				for i in range(0,shp_crt_len):
 					tot_p=tot_p+float(dict['q_price'+str(i+1)])
@@ -639,6 +666,15 @@ def save_cart_checkout(request):
 			record = cursor.fetchone()
 			delete_qry="delete from shopping_cart where username='"+usernm+"';"
 			cursor.execute(delete_qry)
+			sel_count="select max(order_id) from orders;"
+			cursor.execute(sel_count)
+			record=cursor.fetchone()
+			print(record)
+			if record[0] is None:
+				ord_id=0
+			else:
+				ord_id=int(record[0])+1
+			print('ord_id'+str(ord_id))
 			for i in range(0,len(data.split('(')[1:])):
 				it_nm=((a.split('(')[1:])[i].split(','))[0]
 				it_pth=((a.split('(')[1:])[i].split(','))[2]
@@ -650,10 +686,14 @@ def save_cart_checkout(request):
 				sze=((a.split('(')[1:])[i].split(','))[1]
 				insrt_qry="insert into shopping_cart values('"+usernm+"','"+it_nm+"','"+it_pth+"','"+it_prce+"',"+str(qnt)+","+str(it_del_days)+",'"+sze+"');"
 				print(insrt_qry)
+				ins_order_qry="insert into orders values("+str(ord_id)+",'"+usernm+"','"+it_nm+"','"+it_pth+"','"+it_prce+"',"+str(qnt)+","+str(it_del_days)+",'"+sze+"','Not Placed');"
+				ord_id=ord_id+1
+				print(ins_order_qry)
 				if(qnt==0):
 					pass
 				else:
 					cursor.execute(insrt_qry)
+					cursor.execute(ins_order_qry)
 					tot_no_valid_items=tot_no_valid_items+1
 			query1="select item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from shopping_cart where username='"+usernm+"';"
 			print(query1)
@@ -750,77 +790,6 @@ def pay_page(request):
 
 def del_ord_email(request):
 	usernm=request.POST.get('user_name1')
-	text='gopisairam999@gmail.com'
-	MY_ADDRESS=str(text)
-	#print(MY_ADDRESS)    
-	text='pqhylspdtjskergd'
-	PASSWORD=str(text)
-	#print(PASSWORD)
-	item_nm=''
-	item_qnt=''
-	itm_price=''
-	complete_str=''
-	try:
-		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
-		if connection.is_connected():
-			db_Info = connection.get_server_info()
-			print("Connected to MySQL Server version ", db_Info)
-			cursor = connection.cursor()
-			cursor.execute("select database();")
-			record = cursor.fetchone()
-			fetch_qry="select item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from shopping_cart where username='"+usernm+"';"
-			cursor.execute(fetch_qry)
-			record=cursor.fetchall()
-			print(record)
-			for i in range(0,len(record)):
-				item_nm=record[i][0]
-				item_qnt=record[i][3]
-				itm_price=record[i][2]
-				complete_str=complete_str+item_nm+' '+str(item_qnt)+' '+itm_price+'\n'
-			print(complete_str)
-	except Error as e:
-		print("Error while connecting to MySQL", e)
-		#print('before email')
-	
-	try:
-		context=ssl.create_default_context()
-		# set up the SMTP server
-		s = smtplib.SMTP(host='smtp.gmail.com', port=587)
-		s.ehlo()
-		s.starttls(context=context)
-		s.ehlo()
-		s.login(MY_ADDRESS, PASSWORD)
-
-		#Gmail SMTP server address: smtp.gmail.com
-		#Gmail SMTP port (TLS): 587.
-		#Gmail SMTP port (SSL): 465.
-
-		msg = MIMEMultipart()       # create a message
-
-		# setup the parameters of the message
-		msg['From']=MY_ADDRESS
-		msg['To']=MY_ADDRESS
-		print("To Address:",msg['To'])
-		text="Invoice of your Order"
-		msg['Subject']=str(text)
-		print(msg['Subject'])
-
-		msge=complete_str
-		msge=msge+"\n\nThanks,\niClothing Team"
-		message=str(msge)
-		# add in the message body
-		msg.attach(MIMEText(message, 'plain'))
-		print('sending mail')        
-		# send the message via the server set up earlier.
-		s.send_message(msg)
-		del msg
-
-		# Terminate the SMTP session and close the connection
-		s.quit()
-	except Error as e:
-		print("Error while connecting to MySQL", e)
-		print("Some error occured and could not send mail. Sorry!")
-	
 	return render(request,'order_confirm.html',{'user_name':usernm})
 
 def prod_catalog(request):
@@ -928,9 +897,431 @@ def prod_cat(request):
 		print("Error while connecting to MySQL", e)
 	return render(request,'Admin_product_catalog_status.html',{'status':status})
 
+def del_order(request):
+	login_usr=request.POST.get('admn_name')
+	data_str=request.POST.get('data1')
+	items=[]
+	price=[]
+	item_path=[]
+	dict={}
+	dict['user_name']=login_usr
+	print(data_str)
+	
+	text='gopisairam999@gmail.com'
+	MY_ADDRESS=str(text)
+	#print(MY_ADDRESS)    
+	text='pqhylspdtjskergd'
+	PASSWORD=str(text)
+	#print(PASSWORD)
+	item_nm=''
+	item_qnt=''
+	itm_price=''
+	complete_str=''
+	status=data_str.split('(')[0].rstrip(',')
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			if(status=='Approve'):
+				for k in data_str.split('(')[1:]:
+					idk=k.rstrip(',')
+					minus_qnt_qry="select item_path,quantity from orders where order_id="+str(idk)+";"
+					cursor.execute(minus_qnt_qry)
+					record=cursor.fetchall()
+					minus_path=record[0][0]
+					minus_qnt=record[0][1]
+					upd_items="update items set no_of_items_available=no_of_items_available-"+str(minus_qnt)+" where item_path='"+minus_path+"';"
+					cursor.execute(upd_items)
+					upd_qry_ord="Update orders set status='Placed' where order_id='"+str(idk)+"';"
+					cursor.execute(upd_qry_ord)
+					fetch_qry="select item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders where order_id="+str(idk)+";"
+					cursor.execute(fetch_qry)
+					
+					record=cursor.fetchall()
+					for i in range(0,len(record)):
+						item_nm=record[i][0]
+						item_qnt=record[i][3]
+						itm_price=record[i][2]
+						complete_str=complete_str+item_nm+' '+str(item_qnt)+' '+itm_price+'\n'
+			else:
+				for k in data_str.split('(')[1:]:
+					idk=k.rstrip(',')
+					upd_qry_ord="Update orders set status='Rejected' where order_id='"+str(idk)+"';"
+					cursor.execute(upd_qry_ord)
+					fetch_qry="select item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders where order_id="+usernm+";"
+					cursor.execute(fetch_qry)
+					record=cursor.fetchall()
+					for i in range(0,len(record)):
+						item_nm=record[i][0]
+						item_qnt=record[i][3]
+						itm_price=record[i][2]
+						complete_str=complete_str+item_nm+' '+str(item_qnt)+' '+itm_price+'\n'
+			print(upd_qry_ord)
+			print(record)
 
+			print(complete_str)
+			login_chk_qry="select username,email_id from user_login where account_type='Admin' and account_status='Inactive';"
+			cursor.execute(login_chk_qry)
+			record=cursor.fetchall()
+			print(record)
+			for i in range(1,len(record)+1):
+				dict['user_name_'+str(i)]=record[i-1][0]
+				dict['Email_id_'+str(i)]=record[i-1][1]
+			if record is None:
+				dict['total_no_users']=0
+			else:
+				dict['total_no_users']=len(record)
+					
+			if(len(record)==0):
+				dict['no_requests']='No requests Approval Pending'
+			
+			#ord_chck_qry='select order_id,username,item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders limit 20;'
+			ord_chck_qry="select order_id,username,item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders where status='Not Placed';"
+			cursor.execute(ord_chck_qry)
+			record=cursor.fetchall()
+			print(record)
+			dict['tot_orders']=len(record)
+			for i in range(1,len(record)+1):
+				dict['od'+str(i)]=record[i-1][1]
+				dict['us'+str(i)]=record[i-1][0]
+				dict['itm'+str(i)]=record[i-1][2]
+				dict['ppq'+str(i)]=record[i-1][4]
+				dict['qn'+str(i)]=record[i-1][5]
+				dict['sz'+str(i)]=record[i-1][7]
+				try:
+					tia_chk="select no_of_items_available from items where item_path='"+record[i][3]+"';"
+					cursor.execute(tia_chk)
+					dict['tia'+str(i)]=cursor.fetchone()[0]
+				except:
+					dict['tia'+str(i)]=0
+			print(dict)
+			connection.commit()
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+		print("Some error occured and could not send mail. Sorry!")		
+			
+	try:
+		context=ssl.create_default_context()
+		# set up the SMTP server
+		s = smtplib.SMTP(host='smtp.gmail.com', port=587)
+		s.ehlo()
+		s.starttls(context=context)
+		s.ehlo()
+		s.login(MY_ADDRESS, PASSWORD)
 
+		#Gmail SMTP server address: smtp.gmail.com
+		#Gmail SMTP port (TLS): 587.
+		#Gmail SMTP port (SSL): 465.
 
+		msg = MIMEMultipart()       # create a message
+
+		# setup the parameters of the message
+		msg['From']=MY_ADDRESS
+		msg['To']=MY_ADDRESS
+		print("To Address:",msg['To'])
+		text="Invoice of your Order"
+		msg['Subject']=str(text)
+		print(msg['Subject'])
+
+		msge=complete_str
+		msge=msge+"\n\nThanks,\niClothing Team"
+		message=str(msge)
+		# add in the message body
+		msg.attach(MIMEText(message, 'plain'))
+		print('sending mail')        
+		# send the message via the server set up earlier.
+		s.send_message(msg)
+		del msg
+
+		# Terminate the SMTP session and close the connection
+		s.quit()
+	
+			
+		return render(request,'Admin_after_login.html',dict)
+	except Error as e:
+		print("Error while connecting to MySQL : ", e)
+	return render(request,'LoginPage.html',dict)
+
+def Orders_Login(request):
+	usernm=request.POST.get('user_name1')
+	item_name=''
+	item_price=''
+	dict={}
+	dict['user_name']=usernm
+	query=[]
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			query1="select item_name,item_path,item_price,quantity,no_of_days_item_deliver,size,status from orders;"
+			print(query1)
+			cursor.execute(query1)
+			record=cursor.fetchall()
+			print(record)
+			shp_crt_len=len(record)
+			dict['tot_cart_ord']=len(record)
+			for i in range(1,len(record)+1):
+				dict['item_name'+str(i)]=record[i-1][0]
+				dict['price'+str(i)]=record[i-1][2]
+				dict['q'+str(i)]=record[i-1][3]
+				dict['img_cart_path'+str(i)]=record[i-1][1]
+				dict['deliver'+str(i)]=str(record[i-1][4])+' Days to deliver'
+				dict['size'+str(i)]=record[i-1][5]
+				dict['status'+str(i)]=record[i-1][6]
+				qnt_chk=record[i-1][2]
+				if('$' in qnt_chk):
+					a=''
+					for m in qnt_chk:
+						if('$'==m):
+							pass
+						else:
+							a=a+str(m)
+					qnt_chk=float(a)
+				#print(qnt_chk)
+			#dict['q_price'+str(i)]='1'
+				#print(dict['q'+str(i)])
+				#print(dict['price'+str(i)])
+			#print(dict['q_price'+str(i)])
+			img_cart_paths=''
+			price_str=''
+			item_name_str=''
+			qnt_str=''
+			del_str=''
+			q_pr_str=''
+			chck_max_str=''
+			size_str=''
+			stat_str=''
+			
+			for i in range(0,shp_crt_len):
+				img_cart_paths=img_cart_paths+dict['img_cart_path'+str(i+1)]+','
+				price_str=price_str+str(dict['price'+str(i+1)])+','
+				item_name_str=item_name_str+dict['item_name'+str(i+1)]+','
+				qnt_str=qnt_str+str(dict['q'+str(i+1)])+','
+				del_str=del_str+dict['deliver'+str(i+1)]+','
+				size_str=size_str+dict['size'+str(i+1)]+','
+				stat_str=stat_str+dict['status'+str(i+1)]+','
+				
+			
+			img_cart_paths=img_cart_paths[:len(img_cart_paths)-1]
+			price_str=price_str[:len(price_str)-1]
+			item_name_str=item_name_str[:len(item_name_str)-1]
+			qnt_str=qnt_str[:len(qnt_str)-1]
+			del_str=del_str[:len(del_str)-1]
+			q_pr_str=q_pr_str[:len(q_pr_str)-1]
+			size_str=size_str[:len(size_str)-1]
+			stat_str=stat_str[:len(stat_str)-1]
+			
+			dict['img_cart_paths']=img_cart_paths
+			dict['price_str']=price_str
+			dict['item_name_str']=item_name_str
+			dict['qnt_str']=qnt_str
+			dict['del_str']=del_str
+			dict['q_pr_str']=q_pr_str
+			dict['size_str']=size_str
+			dict['stat_str']=stat_str
+			
+			print(dict)
+			return render(request,'User_Orders_View.html',dict)
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+	return render(request,'User_Orders_View.html')
+
+def Query_Form(request):
+	usernm=request.POST.get('user_name1')
+	usr_qry=request.POST.get('user_qry1')
+	
+	print(usr_qry)
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			fet_qry="select max(usr_qry_id) from usr_qry;"
+			cursor.execute(fet_qry)
+			record=cursor.fetchone()
+			print(record)
+			if(record[0] is None):
+				id1=1;
+			else:
+				id1=int(record[0])+1
+			insrt_qry="insert into usr_qry values("+str(id1)+",'"+usernm+"','"+usr_qry+"');"
+			cursor.execute(insrt_qry)
+			connection.commit()
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+	return render(request,'User_Orders_qry_after.html')
+def Feedback_Form(request):
+	usernm=request.POST.get('user_name1')
+	usr_feed=request.POST.get('user_feed1')
+	print(usr_feed)
+	data=usr_feed.split(')')
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			for i in range(0,len(data)-1):
+				path_1=data[i][:data[i].find('-')]
+				fdbk1=data[i][data[i].find('-')+1:]
+				if(fdbk1==''):
+					pass
+				else:
+					insrt_qry="insert into usr_feed_bck values('"+usernm+"','"+path_1+"','"+fdbk1+"');"
+					cursor.execute(insrt_qry)
+		connection.commit()
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+	return render(request,'User_feedback_qry_after.html')
+
+def Search_Items(request):
+	usernm=request.POST.get('user_name1')
+	usr_srch=request.POST.get('search1')
+	print(usernm)
+	print(usr_srch)
+	items=[]
+	price=[]
+	item_path=[]
+	dict={}
+	login_invalid=''
+	dict['user_name']=usernm
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			fetch_query="select item_name,price,item_path from items;"
+			print(fetch_query)
+			cursor.execute(fetch_query)
+			records = cursor.fetchall()
+			print(records)
+			flag=0
+			k=0
+			for i in range(0,len(records)):
+				print(i)
+				if(usr_srch in records[i][2]):
+					dict['product_no_'+str(k+1)]=records[i][0]
+					dict['price_'+str(k+1)]=records[i][1]
+					dict['item_path_'+str(k+1)]=records[i][2]
+					items.append(records[i][0])
+					price.append(records[i][1])
+					item_path.append(records[i][2])
+					flag=1
+					k=k+1
+			if(flag==0):
+				print('single not fornd')
+				for i in range(0,len(records)):
+					flag1=0
+					for j in usr_srch.split(' '):
+						if(j in records[i][2] and flag1==0):
+							dict['product_no_'+str(k+1)]=records[i][0]
+							dict['price_'+str(k+1)]=records[i][1]
+							dict['item_path_'+str(k+1)]=records[i][2]
+							items.append(records[i][0])
+							price.append(records[i][1])
+							item_path.append(records[i][2])
+							flag1=1
+							k=k+1
+							
+			print(items)
+			count_imgs=len(items)
+			item_paths=''
+			for i in range(1,(len(dict)//3)+1):
+				item_paths=item_paths+(dict['item_path_'+str(i)])+','
+			item_paths=item_paths[:len(item_paths)-1]
+			dict['item_paths']=item_paths
+			if(count_imgs>1000):
+				count_imgs=1000
+			dict['total_no_products']=count_imgs
+			print(dict)
+			return render(request,'User_after_Search.html',dict)
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+	return render(request,'User_after_Search.html')
+
+def Search_Items2(request):
+	usernm=request.POST.get('user_name1')
+	usr_srch=request.POST.get('srch_str_1')
+	print(usernm)
+	print(usr_srch)
+	items=[]
+	price=[]
+	item_path=[]
+	dict={}
+	login_invalid=''
+	dict['user_name']=usernm
+	try:
+		connection = mysql.connector.connect(host='localhost',database='Jarvis',user='root',password='Gopisairam@1')
+		if connection.is_connected():
+			db_Info = connection.get_server_info()
+			print("Connected to MySQL Server version ", db_Info)
+			cursor = connection.cursor()
+			cursor.execute("select database();")
+			record = cursor.fetchone()
+			fetch_query="select item_name,price,item_path from items;"
+			print(fetch_query)
+			cursor.execute(fetch_query)
+			records = cursor.fetchall()
+			print(records)
+			flag=0
+			k=0
+			for i in range(0,len(records)):
+				print(i)
+				if(usr_srch in records[i][2]):
+					dict['product_no_'+str(k+1)]=records[i][0]
+					dict['price_'+str(k+1)]=records[i][1]
+					dict['item_path_'+str(k+1)]=records[i][2]
+					items.append(records[i][0])
+					price.append(records[i][1])
+					item_path.append(records[i][2])
+					flag=1
+					k=k+1
+			if(flag==0):
+				print('single not fornd')
+				for i in range(0,len(records)):
+					flag1=0
+					for j in usr_srch.split(' '):
+						if(j in records[i][2] and flag1==0):
+							dict['product_no_'+str(k+1)]=records[i][0]
+							dict['price_'+str(k+1)]=records[i][1]
+							dict['item_path_'+str(k+1)]=records[i][2]
+							items.append(records[i][0])
+							price.append(records[i][1])
+							item_path.append(records[i][2])
+							flag1=1
+							k=k+1
+							
+			print(items)
+			count_imgs=len(items)
+			item_paths=''
+			for i in range(1,(len(dict)//3)+1):
+				item_paths=item_paths+(dict['item_path_'+str(i)])+','
+			item_paths=item_paths[:len(item_paths)-1]
+			dict['item_paths']=item_paths
+			if(count_imgs>1000):
+				count_imgs=1000
+			dict['total_no_products']=count_imgs
+			print(dict)
+			return render(request,'User_after_Search.html',dict)
+	except Error as e:
+		print("Error while connecting to MySQL", e)
+	return render(request,'User_after_Search.html')
 
 
 

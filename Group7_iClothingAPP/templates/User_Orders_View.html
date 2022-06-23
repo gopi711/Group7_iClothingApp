@@ -259,7 +259,7 @@
 		<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
 		
 	</form>
-	<h3 style='left:0%;position:absolute;top:13%'>Delivery Address:</h3>
+<!--	<h3 style='left:0%;position:absolute;top:13%'>Delivery Address:</h3>
 	<div id='address_display_1' value='1' style='left:13%;position:absolute;top:16%'>
 	<select id='sel_addrss' name='sel_addrss'>
 		<option> Select an Address from Below or add a new Address in profile</option>
@@ -270,36 +270,29 @@
 		<option >{{add_5}}</option>
 		<option >{{add_6}}</option>
 	</select>
-	</div>
-	<h4> Review and click on Checkout with out updating any items or go to shopping cart to update:</h4>
+	</div>--><br>
+	<h2> Previous and Current Orders:</h2>
 	
-	<form action='/pay_page/' id='pay_page' method='post'>
+	<form action='/save_cart_checkout/' id='save_cart_checkout' method='post'>
 	{% csrf_token %}
 	<div id='cart_itms' style='margin: 20px;padding: 40px;border-radius: 7px;background-color:white;width:40%;left:10%;position:absolute;top:30%'>
 		{% load static %}
 		<img name='img1' id='img1' src='{% static "Men/Top_Wear/Tshirts/MnTshirt150620221.PNG" %}' style='position:absolute;top:2%;height:90%;width:20%;right:70%;'></img>
 		<h4 name='item_name1' id='item_name1' value='item_name1' style='position:absolute;top:0.3%;left:35%;'>{{item_name1}}</h4><br>
-		<select id='size_1' name='size_1' style='position:absolute;top:37%;width:10%;left:33%'>
-			<optgroup label="Size">
-			<option value='XS' style='position:absolute;'>XS</option>
-			<option value='S' style='position:absolute;'>S</option>
-			<option value='M' style='position:absolute;'>M</option>
-			<option value='L' style='position:absolute;'>L</option>
-			<option value='XL' style='position:absolute;'>XL</option>
-			</optgroup>
-		</select>
+		
 		<!--<option id='crt1' name='size1' value='size1' style='position:absolute;'>XS</option>
 			<option id='crt1' name='size2' value='size2' style='position:absolute;'>S</option>
 			<option id='crt1' name='size3' value='size3' style='position:absolute;'>M</option>
 			<option id='crt1' name='size4' value='size4' style='position:absolute;'>L</option>
 			<option id='crt1' name='size5' value='size5' style='position:absolute;'>XL</option>-->
-		<input type='text' name='qnty1' id='qnty1' style='position:absolute;top:37%;width:10%;left:50%;cursor:pointer;background-color:pink;text-align:center;' value='-' onclick='decrement(id);' readonly></input>
-		<input type='text' name='q1' id='q1' style='position:absolute;top:37%;width:10%;left:60%' value='{{q1}}' readonly></input>
-		<input type='text' name='qa1' id='qa1' style='position:absolute;top:37%;width:10%;left:70%;cursor:pointer;background-color:orange;text-align:center;' value='+' onclick='increment(id);' readonly></input>
+		<input type='text' name='size1' id='size1' style='position:absolute;top:37%;width:10%;left:35%;cursor:pointer;background-color:pink;text-align:center;' value='{{size1}}'  readonly></input>
+		<input type='text' name='q1' id='q1' style='position:absolute;top:37%;width:10%;left:45%' value='{{q1}}' readonly></input>
+		<input type='text' name='stat1' id='stat1' style='position:absolute;top:37%;width:20%;left:55%;cursor:pointer;background-color:orange;text-align:center;' value='{{status1}}' readonly></input>
+		<textarea name='feed1' id='feed1' rows='7' cols='15' style='position:absolute;top:37%;width:30%;left:80%;cursor:auto;text-align:center;' value='{{feedback}}' placeholder='Feedback'></textarea>
 		<!--<input type='text' style='visibility:hidden' name='price1' id='price1' >12</input>-->
 		<h3 style='position:absolute;top:50%;right:62%;' name='price1' id='price1'>{{price1}}</h3><br>
 		<h5 name='delivery1' id='delivery1' style='position:absolute;top:70%;right:50%;'>{{deliver1}}</h5><br>
-		
+		<input type='text' id='chck_max1' name='chck_max1' style='visibility:hidden' value='{{chck_max1}}'></input>
 	</div>
 	<div id='cart_add_div'>
 		{% load static %}
@@ -317,46 +310,57 @@
 	<textarea rows='100' cols='60' id='t4' style="position:absolute;top:1%;visibility:hidden;">{{qnt_str}}</textarea>
 	<textarea rows='100' cols='60' id='t5' style="position:absolute;top:1%;visibility:hidden;">{{del_str}}</textarea>
 	<textarea rows='100' cols='60' id='t6' style="position:absolute;top:1%;visibility:hidden;">{{q_pr_str}}</textarea>
-	<textarea rows='100' cols='60' id='t7' style="position:absolute;top:1%;visibility:hidden;">{{size_select}}</textarea>
-	
+	<textarea rows='100' cols='60' id='t7' style="position:absolute;top:1%;visibility:hidden;">{{size_str}}</textarea>
+	<textarea rows='100' cols='60' id='t8' style="position:absolute;top:1%;visibility:hidden;">{{stat_str}}</textarea>
 	
 	<div id='price_det' name='price_det' style='margin: 20px;padding: 40px;border-radius: 7px;background-color:lightgrey;width:23%;right:3%;top:20%;height:70%;position:absolute'>
-		<h3>Price Details:</h3>
-		<h3 name='price_det_name1' id='price_det_name1'>{{item_name1}}</h3>
-		<h4 name='price_det_qty1' id='price_det_qty1' style='position:absolute;top:15.5%;left:60%;'>{{q1}}</h4>
-		<h4 name='into' id='into' style='position:absolute;top:15.5%;left:65%;'>*</h4>
-		<h4 name='price_det_price1' id='price_det_price1' style='position:absolute;top:15.5%;left:70%;'>{{price1}}</h4>
-		<h4 name='eq' id='eq' style='position:absolute;top:15.5%;left:80%;'>=</h4>
-		<h4 name='price_det_tot1' id='price_det_tot1' style='position:absolute;top:15.5%;left:85%;'>{{q_price1}}</h4>
-		<div id='itemnm1'></div>
-		<div id='qat1'></div>
-		<div id='prce1'></div>
-		<div id='prc_tot1'></div>
-		
-		<h3>Tax & other Fee</h3>
-		<h4 name='price_det_tax1' id='price_det_tax1' style='position:absolute;top:23.5%;left:85%;'>{{tax_tot}}</h4>
-		
+		<h3>User Query:</h3>
 		<hr>
 		
-		<h3 name='lab_tot' id='lab_tot' style='position:absolute;'>Total ($):</h3>
-		<h4 name='price_det1' id='price_det1' style='position:absolute;top:35.5%;left:85%;'>{{tot_p}}</h4>
+		<textarea name='txt_ar1' id='txt_ar1' style='position:absolute;' rows='8' cols='40' placeholder='Please write your Query here!'></textarea>
 		
 	</div>
 	<input type="text" style="visibility:hidden;top:1%;position:absolute;background-color:red;left:20%;" name="tot_cart_ord" id="tot_cart_ord"
 	value="{{tot_cart_ord}}"</input>
-	<input type="text" style="visibility:hidden;top:1%;position:absolute;" name='type_save_chckout' id='type_save_chckout'></input>
-	<input type="text" style="visibility:hidden;top:1%;position:absolute;" name='all_data' id='all_data'></input>
 	<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
 	</form>
+	<form action='/Query_Form/' id='Query_Form' method='post'>
+	{% csrf_token %}
+	<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
+	<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_qry1' id='user_qry1'></input>
+	<input type='text' style='border-radius: 12px;right:17%;position:absolute;top:65%;cursor:pointer' onclick='sub_qry_form();' value='Submit Query' readonly></input>
 	
-	<button class='button' id='save1' onclick='save_the_cart();' style='visibility:hidden;color:white;border-radius: 12px;background-color:cherry;right:15%;position:absolute;top:35%'>Save</button>
-	<button class='button' id='chcout1' onclick='checkout_cart();' style='color:white;border-radius: 12px;background-color:orange;right:5%;position:absolute;top:35%'>CheckOut</button>
+	</form>
+	
+	<form action='/Feedback_Form/' id='Feedback_Form' method='post'>
+	{% csrf_token %}
+	<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
+	<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_feed1' id='user_feed1'></input>
+	<input type='text' style='border-radius: 12px;right:17%;position:absolute;top:75%;cursor:pointer' onclick='sub_feed_form();' value='Submit Feedback' readonly></input>
+	
+	</form>
 	
 	<script>
 		function reload_homepage(){
 			document.getElementById('reload_hmpg_aft_login').submit();
 		}
-		
+		function sub_feed_form(){
+			var tot=document.getElementById('tot_cart_ord').value;	
+			var i;
+			var dt_str='';
+			for(i=1;i<=tot;i++){
+				var imgsrc=document.getElementById('img'+i.toString()).src;
+				var feed_str=document.getElementById('feed'+i.toString()).value;
+				dt_str=dt_str+imgsrc+'-'+feed_str+')'
+			}
+			document.getElementById('user_feed1').value=dt_str;
+			document.getElementById('Feedback_Form').submit();
+		}
+		function sub_qry_form(){
+			console.log(document.getElementById('txt_ar1').value);
+			document.getElementById('user_qry1').value=document.getElementById('txt_ar1').value;
+			document.getElementById('Query_Form').submit();
+		}
 		var text_ar1=(document.getElementById("t1").value).split(',');
 		var text_ar2=(document.getElementById("t2").value).split(',');
 		var text_ar3=(document.getElementById("t3").value).split(',');
@@ -364,70 +368,10 @@
 		var text_ar5=(document.getElementById("t5").value).split(',');
 		var text_ar6=(document.getElementById("t6").value).split(',');
 		var text_ar7=(document.getElementById("t7").value).split(',');
-		document.getElementById('size_1').value=text_ar7[0];
-		document.getElementById('chcout1').style.top='65%';
+		var text_ar8=(document.getElementById("t8").value).split(',');
+		
 		document.getElementById('img1').src=text_ar2[0];
-		function increment(id){
-			var thenum = id.replace( /^\D+/g, '');
-			var tot1=document.getElementById('tot_cart_ord').value;
-			var i=1;
-			var qntt=parseInt(document.getElementById('q'+thenum).value)+1;
-			var pr6=document.getElementById('price'+thenum).innerText;
-			pr6=pr6.replace('$','');
-			var price1=parseFloat(pr6);
-			document.getElementById('q'+thenum).value=qntt;
-			document.getElementById('price_det_qty'+thenum).innerHTML=qntt;
-			var prod=(price1*qntt).toFixed(2);
-			console.log('price_det_qty'+prod)
-			//var present_val=parseFloat(document.getElementById('price_det1').innerText);
-			document.getElementById('price_det_tot'+thenum).innerHTML=prod;
-			var Total_now=0;
-			var pr5=''
-			while(i<=tot1){
-				pr5=document.getElementById('price'+i.toString()).innerText;
-				pr5=pr5.replace('$','');
-				prod=parseFloat((document.getElementById('q'+i.toString()).value)*parseFloat(pr5));
-				Total_now=Total_now+prod;
-				i=i+1;
-			}
-			var Tax=0;
-			Tax=(0.2*Total_now).toFixed(2);
-			Total_now=(parseFloat(Total_now)+parseFloat(Tax)).toFixed(2);
-			//console.log(Tax);
-			document.getElementById('price_det1').innerText=Total_now;
-			document.getElementById('price_det_tax1').innerHTML=Tax;
-			
-		}
-		function decrement(id){
-			var thenum = id.replace( /^\D+/g, '');
-			var tot1=document.getElementById('tot_cart_ord').value;
-			var i=1;
-			var qntt=parseInt(document.getElementById('q'+thenum).value)-1;
-			if(qntt>=0){
-				var pr6=(document.getElementById('price'+thenum).innerText);
-				pr6=pr6.replace('$','');
-				var price1=pr6;
-				document.getElementById('q'+thenum).value=qntt;
-				document.getElementById('price_det_qty'+thenum).innerHTML=qntt;
-				var prod=(price1*qntt).toFixed(2);
-				//console.log('price_det_qty'+prod)
-				//var present_val=parseFloat(document.getElementById('price_det1').innerText);
-				document.getElementById('price_det_tot'+thenum).innerHTML=prod;
-				var Total_now=0;
-				while(i<=tot1){
-					pr5=document.getElementById('price'+i.toString()).innerText;
-					pr5=pr5.replace('$','');
-					prod=parseFloat((document.getElementById('q'+i.toString()).value)*(pr5));
-					Total_now=Total_now+prod;
-					i=i+1;
-				}
-				var Tax=0;
-				Tax=(0.2*Total_now).toFixed(2);
-				Total_now=(parseFloat(Total_now)+parseFloat(Tax)).toFixed(2);
-				document.getElementById('price_det1').innerText=Total_now;
-				document.getElementById('price_det_tax1').innerHTML=Tax;
-			}
-		}
+		
 		var tot=document.getElementById('tot_cart_ord').value;	
 		if(tot.toString()==''){
 			console.log(tot);
@@ -440,26 +384,20 @@
 		document.getElementById('cart_add_div_1').style.top='53%';
 		document.getElementById('cart_add_div').style.top='65%';
 		while(i<=tot){
-			j=j+25;
+			j=j+30;
 			img_top=j-50;
 			const elem = document.getElementById('cart_add_div_1');
 			const elem1 = document.getElementById('img1');
 			const elem2 = document.getElementById('item_name1');
-			const elem3 = document.getElementById('size_1');
-			const elem4 = document.getElementById('size1');
-			const elem5 = document.getElementById('size2');
-			const elem6 = document.getElementById('size3');
-			const elem7 = document.getElementById('size4');
-			const elem8 = document.getElementById('size5');
-			const elem9 = document.getElementById('qnty1');
+			const elem9 = document.getElementById('size1');
 			const elem10 = document.getElementById('q1');
-			const elem11 = document.getElementById('qa1');
+			const elem11 = document.getElementById('stat1');
 			const elem12 = document.getElementById('price1');
 			const elem13 = document.getElementById('delivery1');
+			const elem14 = document.getElementById('feed1')
 			const clone = elem.cloneNode(true);
 			const clone1 = elem1.cloneNode(true);
 			const clone2 = elem2.cloneNode(true);
-			const clone3 = elem3.cloneNode(true);
 			//const clone4 = elem4.cloneNode(true);
 			//const clone5 = elem5.cloneNode(true);
 			//const clone6 = elem6.cloneNode(true);
@@ -470,24 +408,28 @@
 			const clone11 = elem11.cloneNode(true);
 			const clone12 = elem12.cloneNode(true);
 			const clone13 = elem13.cloneNode(true);
+			const clone14 = elem14.cloneNode(true);
+			
 			
 			clone.id='cart_add_div_'+i.toString();
 			clone1.id='img'+i.toString();
 			clone2.id='item_name'+i.toString();
-			clone3.id='size_'+i.toString();
-			clone9.id='qnty'+i.toString();
+			clone9.id='size'+i.toString();
 			clone10.id='q'+i.toString();
-			clone11.id='qa'+(i).toString();
+			clone11.id='status'+(i).toString();
 			clone12.id='price'+i.toString();
 			clone13.id='delivery'+i.toString();
+			clone14.id='feed'+i.toString();
+			clone14.name='feed'+i.toString();
 			
 			document.getElementById("cart_add_div").appendChild(clone);
 			document.getElementById(clone.id).appendChild(clone1);
 			document.getElementById(clone.id).appendChild(clone2);
-			document.getElementById(clone.id).appendChild(clone3);
+			
 			document.getElementById(clone.id).appendChild(clone9);
 			document.getElementById(clone.id).appendChild(clone10);
 			document.getElementById(clone.id).appendChild(clone11);
+			document.getElementById(clone.id).appendChild(clone14);
 			document.getElementById(clone.id).appendChild(clone12);
 			document.getElementById(clone.id).appendChild(clone13);
 			
@@ -497,11 +439,12 @@
 			document.getElementById(clone1.id).style.top=img_top+"%";
 			document.getElementById(clone1.id).style.left="9%";
 			document.getElementById(clone1.id).style.height="95%";
-			document.getElementById(clone3.id).style.top=(j-20)+"%";
+			
 			document.getElementById(clone2.id).style.top=(j-80)+"%";
 			document.getElementById(clone9.id).style.top=(j-30)+"%";
 			document.getElementById(clone10.id).style.top=(j-30)+"%";
 			document.getElementById(clone11.id).style.top=(j-30)+"%";
+			document.getElementById(clone14.id).style.top=(j-30)+"%";
 			document.getElementById(clone12.id).style.top=(j-10)+"%";
 			document.getElementById(clone13.id).style.top=(j+20)+"%";
 			document.getElementById(clone.id).style.margin="10px";
@@ -512,97 +455,14 @@
 			document.getElementById('price'+i.toString()).innerHTML=text_ar3[i-1];
 			document.getElementById('delivery'+i.toString()).innerHTML=text_ar5[i-1];
 			document.getElementById(clone1.id).src=text_ar2[i-1];
-			
-			document.getElementById('size_'+i.toString()).value=text_ar7[i-1];
-			
-			i=i+1;
-		}
-		i=2;
-		var top1=15.5;
-		while(i<=tot){
-			top1=top1+8;
-			console.log('price');
-			const elem = document.getElementById('price_det_name1');
-			const elem1 = document.getElementById('price_det_qty1');
-			const elem2 = document.getElementById('price_det_price1');
-			const elem3 = document.getElementById('price_det_tot1');
-			const clone = elem.cloneNode(true);
-			const clone1 = elem1.cloneNode(true);
-			const clone2 = elem2.cloneNode(true);
-			const clone3 = elem3.cloneNode(true);
-			
-			clone.id='price_det_name'+i.toString();
-			clone1.id='price_det_qty'+i.toString();
-			clone2.id='price_det_price'+i.toString();
-			clone3.id='price_det_tot'+i.toString();
-			
-			document.getElementById("itemnm1").appendChild(clone);
-			document.getElementById('qat1').appendChild(clone1);
-			document.getElementById('prce1').appendChild(clone2);
-			document.getElementById('prc_tot1').appendChild(clone3);
-			
-			document.getElementById(clone.id).innerHTML=text_ar1[i-1];
-			document.getElementById(clone1.id).innerHTML=text_ar4[i-1];
-			document.getElementById(clone2.id).innerHTML=text_ar3[i-1];
-			document.getElementById(clone3.id).innerHTML=text_ar6[i-1];
-			
-			document.getElementById(clone.id).style.top=top1+'%';
-			document.getElementById(clone1.id).style.top=top1+'%';
-			document.getElementById(clone2.id).style.top=top1+'%';
-			document.getElementById(clone3.id).style.top=top1+'%';
-			//document.getElementById(clone1.id).innerHTML='1';
-			document.getElementById('price_det1').style.top=(top1+15)+'%';
-			document.getElementById('price_det_tax1').style.top=(top1+10)+'%';
-			document.getElementById('lab_tot').style.top=(top1+15)+'%';
-			document.getElementById('chcout1').style.top=(top1+45)+'%';
-			document.getElementById('save1').style.top=(top1+45)+'%';
+			document.getElementById(clone9.id).value=text_ar7[i-1];
+			document.getElementById(clone11.id).value=text_ar8[i-1];
 			
 			i=i+1;
 		}
-		if(parseInt(tot)<1){
-			var obj= document.getElementById("cart_itms");
-			var obj2= document.getElementById("price_det");
-			var obj3= document.getElementById("img1");
-			var obj4= document.getElementById("size_1");
-			var obj5= document.getElementById("qnty1");
-			var obj6= document.getElementById("q1");
-			var obj7= document.getElementById("qa1");
-			obj.remove();
-			obj2.remove();
-			obj3.remove();
-			obj4.remove();
-			obj5.remove();
-			obj6.remove();
-			obj7.remove();
-			document.getElementById('chcout1').style.visibility='hidden';
-		}
-		function save_the_cart(){
-			document.getElementById('type_save_chckout').value='Save';
-			var tot=document.getElementById('tot_cart_ord').value;
-			var i=0;
-			var item_name_v;
-			var size_v;
-			var imgv;
-			var qv;
-			var deliveryv;
-			var pricev;
-			var tot_data='';
-			for(i=0;i<tot;i++){
-				tot_data=tot_data+'('
-				item_name_v=document.getElementById('item_name'+(i+1).toString()).innerText;
-				size_v=document.getElementById('size_'+(i+1).toString()).value;
-				imgv=document.getElementById('img'+(i+1).toString()).src;
-				qv=document.getElementById('q'+(i+1).toString()).value;
-				deliveryv=document.getElementById('delivery'+(i+1).toString()).innerText;
-				pricev=document.getElementById('price'+(i+1).toString()).innerText;
-				tot_data=tot_data+item_name_v+','+size_v+','+imgv+','+qv+','+deliveryv+','+pricev
-			}
-			document.getElementById('all_data').value=tot_data;
-			document.getElementById('save_cart_checkout').submit();
-		}
-		function checkout_cart(){
-			document.getElementById('pay_page').submit();
-		}
+		
+		
+
 	</script>
 	
 	</body>

@@ -111,7 +111,7 @@
 	<div class='grow'>
 	<form action='/Login/' method='post'>
 		{% csrf_token %}
-		<b><p>Profile</p></b>
+		<b><p>{{user_name}}</p></b>
 		<br>
 		<button class='right-hover' style='font:20;width:60%;height:40%;border-color:white;cursor:pointer;'>Logout</button>
 	</form>
@@ -379,9 +379,143 @@
 	<button id='submit1' name='submit1'>Submit</button>
 	</form>
 	<h2 id='tot_no_users' style='visibility:hidden;'>{{total_no_users}}</h2>
+	
+	<h2>Select and Approve or Reject the Orders:</h2>
+	<form action='/del_order/' method='post' id='del_order'>
+		{% csrf_token %}
+		<input id='ar1' name='ar1' type='radio' value='Approve'><label>Approve</label>
+		<input id='ar1' name='ar1' type='radio' value='Reject'><label>Reject</label>
+		<h6 type='text' style='visibility:hidden'></h6>
+		<table id='ord_trc'><tbody>
+		<tr>
+		<th>Select</th>
+		<th>Username</th>
+		<th>Order Id</th>
+		<th>Item Name</th>
+		<th>Price per Quantity</th>
+		<th>Quantity</th>
+		<th>Size</th>
+		<th>Total items Available</th>
+		</tr>
+		
+		<tr id='tr11'>
+		<td><input type='checkbox' id='chbx1' name='chbx1'> </td>
+		<td id='od1'>{{od1}}</td>
+		<td id='us1'>{{us1}}</td>
+		<td id='itm1'>{{itm1}}</td>
+		<td id='ppq1'>{{ppq1}}</td>
+		<td id='qn1'>{{qn1}}</td>
+		<td id='sz1'>{{sz1}}</td>
+		<td id='tia1'>{{tia1}}</td>
+		</tr>
+		<tr id='tr12'>
+		<td><input type='checkbox' id='chbx2' name='chbx2'> </td>
+		<td id='od2'>{{od2}}</td>
+		<td id='us2'>{{us2}}</td>
+		<td id='itm2'>{{itm2}}</td>
+		<td id='ppq1'>{{ppq2}}</td>
+		<td id='qn1'>{{qn2}}</td>
+		<td id='sz1'>{{sz2}}</td>
+		<td id='tia1'>{{tia2}}</td>
+		</tr>
+		<tr id='tr13'>
+		<td><input type='checkbox' id='chbx3' name='chbx3'> </td>
+		<td id='od3'>{{od3}}</td>
+		<td id='us3'>{{us3}}</td>
+		<td id='itm3'>{{itm3}}</td>
+		<td id='ppq3'>{{ppq3}}</td>
+		<td id='qn3'>{{qn3}}</td>
+		<td id='sz3'>{{sz3}}</td>
+		<td id='tia3'>{{tia3}}</td>
+		</tr>
+		<tr id='tr14'>
+		<td><input type='checkbox' id='chbx4' name='chbx4'> </td>
+		<td id='od4'>{{od4}}</td>
+		<td id='us4'>{{us4}}</td>
+		<td id='itm4'>{{itm4}}</td>
+		<td id='ppq4'>{{ppq4}}</td>
+		<td id='qn4'>{{qn4}}</td>
+		<td id='sz4'>{{sz4}}</td>
+		<td id='tia4'>{{tia4}}</td>
+		</tr>
+		<tr id='tr15'>
+		<td><input type='checkbox' id='chbx5' name='chbx5'> </td>
+		<td id='od5'>{{od5}}</td>
+		<td id='us5'>{{us5}}</td>
+		<td id='itm5'>{{itm5}}</td>
+		<td id='ppq5'>{{ppq5}}</td>
+		<td id='qn5'>{{qn5}}</td>
+		<td id='sz5'>{{sz5}}</td>
+		<td id='tia5'>{{tia5}}</td>
+		</tr>
+		<tr id='tr16'>
+		<td><input type='checkbox' id='chbx6' name='chbx6'> </td>
+		<td id='od6'>{{od6}}</td>
+		<td id='us6'>{{us6}}</td>
+		<td id='itm6'>{{itm6}}</td>
+		<td id='ppq6'>{{ppq6}}</td>
+		<td id='qn6'>{{qn6}}</td>
+		<td id='sz6'>{{sz6}}</td>
+		<td id='tia6'>{{tia6}}</td>
+		</tr>
+		<tr id='tr17'>
+		<td><input type='checkbox' id='chbx7' name='chbx7'> </td>
+		<td id='od7'>{{od7}}</td>
+		<td id='us7'>{{us7}}</td>
+		<td id='itm7'>{{itm7}}</td>
+		<td id='ppq7'>{{ppq7}}</td>
+		<td id='qn7'>{{qn7}}</td>
+		<td id='sz7'>{{sz7}}</td>
+		<td id='tia7'>{{tia7}}</td>
+		</tr>
+		<tr id='tr18'>
+		<td><input type='checkbox' id='chbx8' name='chbx8'> </td>
+		<td id='od8'>{{od8}}</td>
+		<td id='us8'>{{us8}}</td>
+		<td id='itm8'>{{itm8}}</td>
+		<td id='ppq8'>{{ppq8}}</td>
+		<td id='qn8'>{{qn8}}</td>
+		<td id='sz8'>{{sz8}}</td>
+		<td id='tia8'>{{tia8}}</td>
+		</tr>
+		<tr id='tr19'>
+		<td><input type='checkbox' id='chbx9' name='chbx9'> </td>
+		<td id='od9'>{{od9}}</td>
+		<td id='us9'>{{us9}}</td>
+		<td id='itm9'>{{itm9}}</td>
+		<td id='ppq9'>{{ppq9}}</td>
+		<td id='qn9'>{{qn9}}</td>
+		<td id='sz9'>{{sz9}}</td>
+		<td id='tia9'>{{tia9}}</td>
+		</tr>
+		</tbody>
+		</table>
+		<input type='text' style='visibility:hidden;top:1%' id='data1' name='data1'></input>
+		<br>
+		<input type='text' style='visibility:hidden;top:1%' id='admn_name' name='admn_name' value='{{user_name}}'></input>
+		<input type='text' id='tot_orders' value='{{tot_orders}}' style='visibility:hidden'></input><br>
+		<input type='text' id='del_submit' name='del_submit' value='Submit' style='cursor:pointer;background-color:lightgrey' onclick='del_req_sub();' readonly></input>
+	</form>
+	
+	
 	<script>
 		function reload_homepage(){
 			document.getElementById('reload_admin_hmpg_aft_login').submit();
+		}
+		
+		function del_req_sub(){
+			var i;
+			var tot_orders1=document.getElementById('tot_orders').value;
+			var opt=document.getElementById('ar1').value; 
+			var od_no;
+			for(i=1;i<=tot_orders1;i++){
+				if(document.getElementById('chbx'+i.toString()).checked==true){
+					od_no=document.getElementById('ord_trc').rows[i].cells[1].innerHTML;
+					us_nm=document.getElementById('ord_trc').rows[i].cells[2].innerHTML;
+					opt=opt+',('+us_nm;
+			}}
+			document.getElementById('data1').value=opt+',';
+			document.getElementById('del_order').submit();
 		}
 		function Updatetext(us,stat){
 			var str=document.getElementById("Approve_reject_user").rows[us].cells[1].innerHTML;
@@ -390,75 +524,22 @@
 		
 		var i;
 		var tot_no_of_products=parseInt(document.getElementById('tot_no_users').textContent);
-		//document.getElementById('Remove_if_Empty_div_2').src={{item_path_2}};
-		for(i=tot_no_of_products+1;i<=100;i++){
+		for(i=tot_no_of_products+1;i<=20;i++){
 			var rm_str="tr"+i.toString();
 			var obj= document.getElementById(rm_str);
 			obj.remove();
 		}
-		
-		/*
-		var myTableDiv = document.getElementById("myDynamicTable");
-
-		var table = document.createElement('TABLE');
-		table.border = '1';
-		var tableBody = document.createElement('TBODY');
-		table.appendChild(tableBody);
-		
-		var tr = document.createElement('TR');
-		tableBody.appendChild(tr);	
-		
-		var th = document.createElement('TH');
-		th.width = '75';
-		th.appendChild(document.createTextNode("S.No"));
-		tr.appendChild(th);
-		var th = document.createElement('TH');
-		th.width = '75';
-		th.appendChild(document.createTextNode("Username"));
-		tr.appendChild(th);
-		var th = document.createElement('TH');
-		th.width = '75';
-		th.appendChild(document.createTextNode("Email Id"));
-		tr.appendChild(th);
-		var th = document.createElement('TH');
-		th.width = '75';
-		th.appendChild(document.createTextNode("Approve"));
-		tr.appendChild(th);
-		var th = document.createElement('TH');
-		th.width = '75';
-		th.appendChild(document.createTextNode("Reject"));
-		tr.appendChild(th);
-		
-		for (var i = 0; i < 3; i++) {
-			var tr = document.createElement('TR');
-			tableBody.appendChild(tr);
-			
-			for (var j = 0; j < 5; j++) {
-				if(j<3){
-					var td = document.createElement('TD');
-					td.width = '75';
-					td.appendChild(document.createTextNode("Cell " + i + "," + j));
-					tr.appendChild(td);
-				}
-				else{
-					var td = document.createElement('TD');
-					td.width = '75';
-					td.appendChild(document.createTextNode("Cell " + i + "," + j));
-					//var newRadioButton=document.createElement(input(type='radio',name='radio',value='1st'));
-					//td.appendChild(document.createTextNode(newRadioButton);
-					tr.appendChild(td);
-				}
-			}
+		var tot_orders1=document.getElementById('tot_orders').value;
+		if(tot_orders1==0){
+			var obj= document.getElementById('tr11');
+			obj.remove();
 		}
-		myTableDiv.appendChild(table);
-		
-		var i = 0;
-		var tot_no_of_products=parseInt(document.getElementById('tot_no_products').textContent);
-		for(i=tot_no_of_products+1;i<=12;i++){
-			var rm_str="Remove_if_Empty"+i;
+		else{
+		for(i=tot_orders1+1;i<=9;i++){
+			var rm_str='tr1'+i.toString();
 			var obj= document.getElementById(rm_str);
 			obj.remove();
-		}*/
+		}}
 	</script>
 	
 	</body>

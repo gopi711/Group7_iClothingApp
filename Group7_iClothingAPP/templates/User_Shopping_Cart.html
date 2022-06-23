@@ -299,7 +299,7 @@
 		<!--<input type='text' style='visibility:hidden' name='price1' id='price1' >12</input>-->
 		<h3 style='position:absolute;top:50%;right:62%;' name='price1' id='price1'>{{price1}}</h3><br>
 		<h5 name='delivery1' id='delivery1' style='position:absolute;top:70%;right:50%;'>{{deliver1}}</h5><br>
-		
+		<input type='text' id='chck_max1' name='chck_max1' style='visibility:hidden' value='{{chck_max1}}'></input>
 	</div>
 	<div id='cart_add_div'>
 		{% load static %}
@@ -317,7 +317,7 @@
 	<textarea rows='100' cols='60' id='t4' style="position:absolute;top:1%;visibility:hidden;">{{qnt_str}}</textarea>
 	<textarea rows='100' cols='60' id='t5' style="position:absolute;top:1%;visibility:hidden;">{{del_str}}</textarea>
 	<textarea rows='100' cols='60' id='t6' style="position:absolute;top:1%;visibility:hidden;">{{q_pr_str}}</textarea>
-	
+	<textarea rows='100' cols='60' id='t7' style="position:absolute;top:1%;visibility:hidden;">{{chck_max_str}}</textarea>
 	
 	<div id='price_det' name='price_det' style='margin: 20px;padding: 40px;border-radius: 7px;background-color:lightgrey;width:23%;right:3%;top:20%;height:70%;position:absolute'>
 		<h3>Price Details:</h3>
@@ -362,6 +362,7 @@
 		var text_ar4=(document.getElementById("t4").value).split(',');
 		var text_ar5=(document.getElementById("t5").value).split(',');
 		var text_ar6=(document.getElementById("t6").value).split(',');
+		var text_ar7=(document.getElementById("t7").value).split(',');
 		
 		document.getElementById('img1').src=text_ar2[0];
 		function increment(id){
@@ -369,31 +370,38 @@
 			var tot1=document.getElementById('tot_cart_ord').value;
 			var i=1;
 			var qntt=parseInt(document.getElementById('q'+thenum).value)+1;
+			var max_chk=parseInt(document.getElementById('chck_max'+thenum).value);
 			var pr6=document.getElementById('price'+thenum).innerText;
 			pr6=pr6.replace('$','');
 			var price1=parseFloat(pr6);
-			document.getElementById('q'+thenum).value=qntt;
-			document.getElementById('price_det_qty'+thenum).innerHTML=qntt;
-			var prod=(price1*qntt).toFixed(2);
-			console.log('price_det_qty'+prod)
-			//var present_val=parseFloat(document.getElementById('price_det1').innerText);
-			document.getElementById('price_det_tot'+thenum).innerHTML=prod;
-			var Total_now=0;
-			var pr5=''
-			while(i<=tot1){
-				pr5=document.getElementById('price'+i.toString()).innerText;
-				pr5=pr5.replace('$','');
-				prod=parseFloat((document.getElementById('q'+i.toString()).value)*parseFloat(pr5));
-				Total_now=Total_now+prod;
-				i=i+1;
+			if(qntt<=max_chk){
+				document.getElementById('q'+thenum).value=qntt;
+				document.getElementById('price_det_qty'+thenum).innerHTML=qntt;
+				var prod=(price1*qntt).toFixed(2);
+				console.log('price_det_qty'+prod)
+				//var present_val=parseFloat(document.getElementById('price_det1').innerText);
+				document.getElementById('price_det_tot'+thenum).innerHTML=prod;
+				var Total_now=0;
+				var pr5=''
+				while(i<=tot1){
+					pr5=document.getElementById('price'+i.toString()).innerText;
+					pr5=pr5.replace('$','');
+					prod=parseFloat((document.getElementById('q'+i.toString()).value)*parseFloat(pr5));
+					Total_now=Total_now+prod;
+					i=i+1;
+				}
+				var Tax=0;
+				Tax=(0.2*Total_now).toFixed(2);
+				Total_now=(parseFloat(Total_now)+parseFloat(Tax)).toFixed(2);
+				//console.log(Tax);
+				document.getElementById('price_det1').innerText=Total_now;
+				document.getElementById('price_det_tax1').innerHTML=Tax;
 			}
-			var Tax=0;
-			Tax=(0.2*Total_now).toFixed(2);
-			Total_now=(parseFloat(Total_now)+parseFloat(Tax)).toFixed(2);
-			//console.log(Tax);
-			document.getElementById('price_det1').innerText=Total_now;
-			document.getElementById('price_det_tax1').innerHTML=Tax;
-			
+			else{
+				var str_nam=document.getElementById('item_name'+thenum).innerHTML;
+				var x1='Expected Quantity is less than '+max_chk.toString()+' for '+str_nam;
+				alert(x1);
+			}
 		}
 		function decrement(id){
 			var thenum = id.replace( /^\D+/g, '');
@@ -453,6 +461,7 @@
 			const elem11 = document.getElementById('qa1');
 			const elem12 = document.getElementById('price1');
 			const elem13 = document.getElementById('delivery1');
+			const elem14=document.getElementById('chck_max1');
 			const clone = elem.cloneNode(true);
 			const clone1 = elem1.cloneNode(true);
 			const clone2 = elem2.cloneNode(true);
@@ -467,6 +476,7 @@
 			const clone11 = elem11.cloneNode(true);
 			const clone12 = elem12.cloneNode(true);
 			const clone13 = elem13.cloneNode(true);
+			const clone14=elem14.cloneNode(true);
 			
 			clone.id='cart_add_div_'+i.toString();
 			clone1.id='img'+i.toString();
@@ -477,6 +487,7 @@
 			clone11.id='qa'+(i).toString();
 			clone12.id='price'+i.toString();
 			clone13.id='delivery'+i.toString();
+			clone14.id='chck_max'+i.toString();
 			
 			document.getElementById("cart_add_div").appendChild(clone);
 			document.getElementById(clone.id).appendChild(clone1);
@@ -487,6 +498,7 @@
 			document.getElementById(clone.id).appendChild(clone11);
 			document.getElementById(clone.id).appendChild(clone12);
 			document.getElementById(clone.id).appendChild(clone13);
+			document.getElementById(clone.id).appendChild(clone14);
 			
 			//document.getElementById(clone.id).style.border-radius="7px";
 			//document.getElementById(clone.id).style.background-color="lightgrey";
@@ -509,6 +521,7 @@
 			document.getElementById('price'+i.toString()).innerHTML=text_ar3[i-1];
 			document.getElementById('delivery'+i.toString()).innerHTML=text_ar5[i-1];
 			document.getElementById(clone1.id).src=text_ar2[i-1];
+			document.getElementById(clone14.id).value=text_ar7[i-1];
 			
 			i=i+1;
 		}
@@ -569,6 +582,7 @@
 			obj5.remove();
 			obj6.remove();
 			obj7.remove();
+			document.getElementById('save1').style.visibility='hidden';
 		}
 
 		function save_the_cart(){

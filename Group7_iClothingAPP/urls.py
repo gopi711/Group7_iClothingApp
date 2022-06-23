@@ -44,6 +44,12 @@ urlpatterns = [
 	path("del_ord_email/", views.del_ord_email),
 	path("prod_catalog/", views.prod_catalog),
 	path("prod_cat/", views.prod_cat),
+	path("del_order/", views.del_order),
+	path("Orders_Login/", views.Orders_Login),
+	path("Query_Form/",views.Query_Form),
+	path("Feedback_Form/", views.Feedback_Form),
+	path("Browse/", views.Search_Items),
+	path("Browse2/", views.Search_Items2),
 ]
 
 #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

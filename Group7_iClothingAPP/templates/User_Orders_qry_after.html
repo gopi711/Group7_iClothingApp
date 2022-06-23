@@ -94,11 +94,35 @@
 			background-color:red;
 			position:absolute;
 		}
+		.button {
+			background-color: #4CAF50; /* Green */
+			border: none;
+			color: green;
+			padding: 20px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			margin: 4px 2px;
+			cursor: pointer;
+		}
+		
+		.button:hover {background-color: #3e8e41}
+		
+		.button:active {
+			background-color: #3e8e41;
+			box-shadow: 0 5px #666;
+			transform: translateY(4px);
+		}
 	</style>
 	<div onclick='reload_homepage();' style='cursor:pointer;'>
 		<h3 style='font-style:italic;color:red;'>iCLOTHING</h3>
 		<p style='font-size:10px;top:5%;position:absolute;color:orange;'>Fashion Store </p>
 	</div>
+	
+	
+	
+	
 	<div class='grow'>
 	<form action='/Logout/' method='post'>
 		{% csrf_token %}
@@ -115,13 +139,13 @@
 		{% csrf_token %}
 		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Edit Profile</button>
 	</form>
-	<!--<form action='/open_cart/' method='post'>
+	<!--
+	<form action='/open_cart/' method='post'>
 		{% csrf_token %}
 		<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
 		<button class='right-hover' style='font:20;width:60%;height:12%;border-color:white;cursor:pointer;'>Shopping Cart</button>
 	</form>
 	-->
-	
 	<form action='/cart_Login/' method='post'>
 		{% csrf_token %}
 		<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
@@ -129,23 +153,12 @@
 	</form>
 	</div>
 	<br>
-	
-	<form action='/open_cart/' id='open_cart' method='post'>
-	{% csrf_token %}
-	<div id='cart' name='cart' style="position:absolute:top:0%;right:1%;background-color:white;width:10%;height:10%;">
-		{% load static %}
-		<img src='{% static "shopping-cart-logo.jpg" %}' onclick="document.getElementById('open_cart').submit()" style='position:absolute;top:1%;height:10%;right:10%;cursor:pointer;'></img>
-		<h6 style='position:absolute;top:0%;height:10%;right:10.5%;cursor:pointer;color:red;' id='cart_val' name='cart_val'>0</h6>
-		<input type='text' id='cart_click'  style='visibility:hidden' name='cart_click'></input>
-		<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
-	</div>
-	</form>
-	
 	<hr>
 	<form action='/Browse/' method='post' style='position:absolute;right:40%;top:4%;'>
 		{% csrf_token %}
 		<input type='text' style='font:40;border-radius: 7px;width:200%;height:40px' placeholder='search'></button></form>
 	
+	<br>
 	
 	
 	<div class='categories_hover'>
@@ -246,19 +259,19 @@
 		<input type="text" style="visibility: hidden;top:1%;position:absolute;" name='user_name1' value={{user_name}}></input>
 		
 	</form>
-	<div style="border: 1px solid black">
-		<h2 style='color:green;'> Order Placed and getting ready to be Shipped!</h2>
-		<h3> The Order is Awaiting for Admin Approval and you will receive an email once Admin Confirm and Approves the Order.</h3>
-		<h3> please check and get back to us if you have any queries.</h3>
-		<h2 style='color:green;'> Thank You for Shopping with us! Hope you like the Products.</h2>
-	</div>
+	<br>
+	<h2> Query Submited by you is under review by us, Please allow us some time to check and get back on the query.</h2>
+	
 	
 	<script>
 		function reload_homepage(){
 			document.getElementById('reload_hmpg_aft_login').submit();
 		}
 		
+
 	</script>
 	
 	</body>
 </html>
+
+	
