@@ -482,7 +482,7 @@ def open_cart(request):
 			print('no_of_tems_in_cart:'+str(no_of_items_cart))
 			for i in range(0,len(query)):
 				cursor.execute(query[i])
-			query1="select item_name,item_path,item_price,quantity,no_of_days_item_deliver from shopping_cart where username='"+usernm+"';"
+			query1="select sc1.item_name,sc1.item_path,sc1.item_price,sc1.quantity,sc1.no_of_days_item_deliver,it1.no_of_items_available from shopping_cart sc1,items it1 where sc1.item_path=it1.item_path and username='"+usernm+"';"
 			print(query1)
 			cursor.execute(query1)
 			record=cursor.fetchall()
