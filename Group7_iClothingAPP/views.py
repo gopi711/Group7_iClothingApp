@@ -633,7 +633,8 @@ def save_cart_checkout(request):
 		sel_count="select max(order_id) from orders;"
 		cursor.execute(sel_count)
 		record=cursor.fetchone()
-		ord_id=int(record[0])+1
+		print(record)
+		ord_id=int(record[0][0])+1
 		print('ord_id'+str(ord_id))
 		for i in range(0,len(data.split('(')[1:])):
 			it_nm=((a.split('(')[1:])[i].split(','))[0]
