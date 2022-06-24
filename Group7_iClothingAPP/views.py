@@ -950,7 +950,7 @@ def del_order(request):
 				us_nm_email=k[k.find('-')+1:-1]
 				upd_qry_ord="Update orders set status='Rejected' where order_id='"+str(idk)+"';"
 				cursor.execute(upd_qry_ord)
-				fetch_qry="select item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders where order_id="+usernm+";"
+				fetch_qry="select item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders where order_id="+str(idk)+";"
 				cursor.execute(fetch_qry)
 				record=cursor.fetchall()
 				complete_str='Your Order is Rejected, Please reach out to Customer support. \n'
