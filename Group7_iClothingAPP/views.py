@@ -863,6 +863,7 @@ def del_order(request):
 	dict['user_name']=login_usr
 	print(data_str)
 	
+	to_addrss_mail=''
 	text='gopisairam999@gmail.com'
 	MY_ADDRESS=str(text)
 	#print(MY_ADDRESS)    
@@ -878,6 +879,10 @@ def del_order(request):
 		DATABASE_URL = os.environ.get('DATABASE_URL')
 		connection = psycopg2.connect(DATABASE_URL)
 		cursor = connection.cursor()
+		email_qry="select email_id from user_login where username='"+login_usr+"';'"
+		cursor.execute(email_qry)
+		record=cursor.fetchone()
+		to_addrss_mail=record[0]
 		if(status=='Approve'):
 			for k in data_str.split('(')[1:]:
 				idk=k.rstrip(',')
@@ -954,7 +959,7 @@ def del_order(request):
 	except Error as e:
 		print("Error while connecting to MySQL", e)
 		print("Some error occured and could not send mail. Sorry!")		
-			
+	
 	try:
 		context=ssl.create_default_context()
 		# set up the SMTP server
@@ -972,7 +977,7 @@ def del_order(request):
 
 		# setup the parameters of the message
 		msg['From']=MY_ADDRESS
-		msg['To']=MY_ADDRESS
+		msg['To']=to_addrss_mail
 		print("To Address:",msg['To'])
 		text="Invoice of your Order"
 		msg['Subject']=str(text)
