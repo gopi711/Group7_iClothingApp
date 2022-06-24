@@ -861,6 +861,7 @@ def del_order(request):
 	item_path=[]
 	dict={}
 	dict['user_name']=login_usr
+	print('data str is:')
 	print(data_str)
 	
 	to_addrss_mail=''
