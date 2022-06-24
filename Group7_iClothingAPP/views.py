@@ -185,7 +185,7 @@ def login_request(request):
 						
 						#ord_chck_qry='select order_id,username,item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders limit 20;'
 						#ord_chck_qry='select order_id,username,item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders;'
-						ord_chck_qry="select order_id,username,item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders where status='Not Placed';"
+						ord_chck_qry="select order_id,username,item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders where status='Not Placed' limit 9;"
 						print(ord_chck_qry)
 						cursor.execute(ord_chck_qry)
 						record=cursor.fetchall()
@@ -879,13 +879,10 @@ def del_order(request):
 		DATABASE_URL = os.environ.get('DATABASE_URL')
 		connection = psycopg2.connect(DATABASE_URL)
 		cursor = connection.cursor()
-		email_qry="select email_id from user_login where username='"+login_usr+"';'"
-		cursor.execute(email_qry)
-		record=cursor.fetchone()
-		to_addrss_mail=record[0]
 		if(status=='Approve'):
 			for k in data_str.split('(')[1:]:
-				idk=k.rstrip(',')
+				idk=k[:k.find('-')]
+				us_nm_email=k[k.find('-')+1:-1]
 				minus_qnt_qry="select item_path,quantity from orders where order_id="+str(idk)+";"
 				cursor.execute(minus_qnt_qry)
 				record=cursor.fetchall()
@@ -899,14 +896,57 @@ def del_order(request):
 				cursor.execute(fetch_qry)
 					
 				record=cursor.fetchall()
+				complete_str='Your Order is Approved and will be delivered soon:\n'
 				for i in range(0,len(record)):
 					item_nm=record[i][0]
 					item_qnt=record[i][3]
 					itm_price=record[i][2]
 					complete_str=complete_str+item_nm+' '+str(item_qnt)+' '+itm_price+'\n'
+				email_qry="select email_id from user_login where username='"+us_nm_email+"';"
+				cursor.execute(email_qry)
+				record=cursor.fetchone()
+				to_addrss_mail=record[0]
+				try:
+					context=ssl.create_default_context()
+					# set up the SMTP server
+					s = smtplib.SMTP(host='smtp.gmail.com', port=587)
+					s.ehlo()
+					s.starttls(context=context)
+					s.ehlo()
+					s.login(MY_ADDRESS, PASSWORD)
+
+					#Gmail SMTP server address: smtp.gmail.com
+					#Gmail SMTP port (TLS): 587.
+					#Gmail SMTP port (SSL): 465.
+
+					msg = MIMEMultipart()       # create a message
+
+					# setup the parameters of the message
+					msg['From']=MY_ADDRESS
+					msg['To']=to_addrss_mail
+					print("To Address:",msg['To'])
+					text="Invoice of your Order"
+					msg['Subject']=str(text)
+					print(msg['Subject'])
+
+					msge=complete_str
+					msge=msge+"\n\nThanks,\niClothing Team"
+					message=str(msge)
+					# add in the message body
+					msg.attach(MIMEText(message, 'plain'))
+					print('sending mail')        
+					# send the message via the server set up earlier.
+					s.send_message(msg)
+					del msg
+
+					# Terminate the SMTP session and close the connection
+					s.quit()
+				except Error as e:
+					print(e)
 		else:
 			for k in data_str.split('(')[1:]:
-				idk=k.rstrip(',')
+				idk=k[:k.find('-')]
+				us_nm_email=k[k.find('-')+1:-1]
 				upd_qry_ord="Update orders set status='Rejected' where order_id='"+str(idk)+"';"
 				cursor.execute(upd_qry_ord)
 				fetch_qry="select item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders where order_id="+usernm+";"
@@ -917,6 +957,47 @@ def del_order(request):
 					item_qnt=record[i][3]
 					itm_price=record[i][2]
 					complete_str=complete_str+item_nm+' '+str(item_qnt)+' '+itm_price+'\n'
+				email_qry="select email_id from user_login where username='"+us_nm_email+"';"
+				cursor.execute(email_qry)
+				record=cursor.fetchone()
+				to_addrss_mail=record[0]
+				try:
+					context=ssl.create_default_context()
+					# set up the SMTP server
+					s = smtplib.SMTP(host='smtp.gmail.com', port=587)
+					s.ehlo()
+					s.starttls(context=context)
+					s.ehlo()
+					s.login(MY_ADDRESS, PASSWORD)
+
+					#Gmail SMTP server address: smtp.gmail.com
+					#Gmail SMTP port (TLS): 587.
+					#Gmail SMTP port (SSL): 465.
+
+					msg = MIMEMultipart()       # create a message
+
+					# setup the parameters of the message
+					msg['From']=MY_ADDRESS
+					msg['To']=to_addrss_mail
+					print("To Address:",msg['To'])
+					text="Invoice of your Order"
+					msg['Subject']=str(text)
+					print(msg['Subject'])
+
+					msge=complete_str
+					msge=msge+"\n\nThanks,\niClothing Team"
+					message=str(msge)
+					# add in the message body
+					msg.attach(MIMEText(message, 'plain'))
+					print('sending mail')        
+					# send the message via the server set up earlier.
+					s.send_message(msg)
+					del msg
+
+					# Terminate the SMTP session and close the connection
+					s.quit()
+				except Error as e:
+					print(e)
 		print(upd_qry_ord)
 		print(record)
 		print(complete_str)
@@ -956,50 +1037,10 @@ def del_order(request):
 				dict['tia'+str(i)]=0
 		print(dict)
 		connection.commit()
+		return render(request,'Admin_after_login.html',dict)
 	except Error as e:
 		print("Error while connecting to MySQL", e)
 		print("Some error occured and could not send mail. Sorry!")		
-	
-	try:
-		context=ssl.create_default_context()
-		# set up the SMTP server
-		s = smtplib.SMTP(host='smtp.gmail.com', port=587)
-		s.ehlo()
-		s.starttls(context=context)
-		s.ehlo()
-		s.login(MY_ADDRESS, PASSWORD)
-
-		#Gmail SMTP server address: smtp.gmail.com
-		#Gmail SMTP port (TLS): 587.
-		#Gmail SMTP port (SSL): 465.
-
-		msg = MIMEMultipart()       # create a message
-
-		# setup the parameters of the message
-		msg['From']=MY_ADDRESS
-		msg['To']=to_addrss_mail
-		print("To Address:",msg['To'])
-		text="Invoice of your Order"
-		msg['Subject']=str(text)
-		print(msg['Subject'])
-
-		msge=complete_str
-		msge=msge+"\n\nThanks,\niClothing Team"
-		message=str(msge)
-		# add in the message body
-		msg.attach(MIMEText(message, 'plain'))
-		print('sending mail')        
-		# send the message via the server set up earlier.
-		s.send_message(msg)
-		del msg
-
-		# Terminate the SMTP session and close the connection
-		s.quit()
-	
-			
-		return render(request,'Admin_after_login.html',dict)
-	except Error as e:
-		print("Error while connecting to MySQL : ", e)
 	return render(request,'LoginPage.html',dict)
 
 def Orders_Login(request):

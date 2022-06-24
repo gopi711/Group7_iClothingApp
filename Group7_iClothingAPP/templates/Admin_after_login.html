@@ -507,12 +507,13 @@
 			var i;
 			var tot_orders1=document.getElementById('tot_orders').value;
 			var opt=document.getElementById('ar1').value; 
-			var od_no;
+			var od_no='';
+			var us_nm='';
 			for(i=1;i<=tot_orders1;i++){
 				if(document.getElementById('chbx'+i.toString()).checked==true){
 					od_no=document.getElementById('ord_trc').rows[i].cells[1].innerHTML;
 					us_nm=document.getElementById('ord_trc').rows[i].cells[2].innerHTML;
-					opt=opt+',('+us_nm;
+					opt=opt+',('+us_nm+'-'+od_no;
 			}}
 			document.getElementById('data1').value=opt+',';
 			document.getElementById('del_order').submit();
