@@ -1013,7 +1013,7 @@ def Orders_Login(request):
 		DATABASE_URL = os.environ.get('DATABASE_URL')
 		connection = psycopg2.connect(DATABASE_URL)
 		cursor = connection.cursor()
-		query1="select item_name,item_path,item_price,quantity,no_of_days_item_deliver,size,status from orders;"
+		query1="select item_name,item_path,item_price,quantity,no_of_days_item_deliver,size,status from orders where username='"+usernm+"';"
 		print(query1)
 		cursor.execute(query1)
 		record=cursor.fetchall()
