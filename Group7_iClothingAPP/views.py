@@ -634,7 +634,10 @@ def save_cart_checkout(request):
 		cursor.execute(sel_count)
 		record=cursor.fetchone()
 		print(record)
-		ord_id=int(record[0][0])+1
+		if(record[0] is None):
+			ord_id=1
+		else:
+			ord_id=int(record[0])+1
 		print('ord_id'+str(ord_id))
 		for i in range(0,len(data.split('(')[1:])):
 			it_nm=((a.split('(')[1:])[i].split(','))[0]
