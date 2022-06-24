@@ -390,6 +390,7 @@
 			var thenum = id.replace( /^\D+/g, '');
 			var strng=document.getElementById('Remove_if_Empty_div_'+thenum.toString()).src;
 			document.getElementById('cart_click').value=document.getElementById('cart_click').value+strng+',';
+			console.log(document.getElementById('cart_click').value);
 			document.getElementById('cart_val').innerHTML=parseInt(document.getElementById('cart_val').innerHTML)+1;
 		}
 		var input = document.getElementById("search1");
@@ -617,8 +618,8 @@
 		}
 		var i = 0;
 		var tot_no_of_products=parseInt(document.getElementById('tot_no_products').textContent);
-		for(i=tot_no_of_products+1;i<=100;i++){
-			var rm_str="Remove_if_Empty"+i;
+		for(i=tot_no_of_products+1;i<=12;i++){
+			var rm_str="Remove_if_Empty"+i.toString();
 			var obj= document.getElementById(rm_str);
 			obj.remove();
 		}

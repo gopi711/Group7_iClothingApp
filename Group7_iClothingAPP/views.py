@@ -454,9 +454,10 @@ def open_cart(request):
 	item_paths=item_paths.split(',')
 	no_of_items_cart=len(item_paths)-1
 	query=[]
+	'''
 	for i in range(0,len(item_paths)):
 		item_paths[i]=item_paths[i][item_paths[i].find('static')-1:]
-	
+	'''
 	print(item_paths)
 	try:
 		DATABASE_URL = os.environ.get('DATABASE_URL')
