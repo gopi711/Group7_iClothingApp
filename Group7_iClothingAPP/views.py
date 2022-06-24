@@ -507,7 +507,7 @@ def open_cart(request):
 							a=a+str(m)
 					qnt_chk=float(a)
 				#print(qnt_chk)
-				dict['q_price'+str(i)]=float(qnt_chk*record[i-1][3])
+				dict['q_price'+str(i)]=round((float(qnt_chk)*float(record[i-1][3])),2)
 				#print(dict['q'+str(i)])
 				#print(dict['price'+str(i)])
 				#print(dict['q_price'+str(i)])
