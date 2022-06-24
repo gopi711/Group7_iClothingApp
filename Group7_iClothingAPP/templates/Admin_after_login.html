@@ -507,6 +507,13 @@
 			var i;
 			var tot_orders1=document.getElementById('tot_orders').value;
 			var opt=document.getElementById('ar1').value; 
+			var radios = document.getElementsByName('ar1');
+			for (var radio of radios)
+			{
+				if (radio.checked) {
+					opt=radio.value;
+				}
+			}
 			var od_no='';
 			var us_nm='';
 			for(i=1;i<=tot_orders1;i++){
