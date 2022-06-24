@@ -952,6 +952,7 @@ def del_order(request):
 				fetch_qry="select item_name,item_path,item_price,quantity,no_of_days_item_deliver,size from orders where order_id="+usernm+";"
 				cursor.execute(fetch_qry)
 				record=cursor.fetchall()
+				complete_str='Your Order is Rejected, Please reach out to Customer support. \n'
 				for i in range(0,len(record)):
 					item_nm=record[i][0]
 					item_qnt=record[i][3]
